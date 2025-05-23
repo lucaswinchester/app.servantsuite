@@ -17,7 +17,7 @@ import {
   Library,
   CheckCircle
 } from 'lucide-react';
-import '../../styles/dashboard.css';
+
 
 export default function Dashboard() {
   // Sample data
@@ -99,34 +99,37 @@ export default function Dashboard() {
   ];
 
   return (
-    <SidebarLayout>
+    <>
+      <SidebarLayout>
       {/* Top Bar */}
-      <div className="top-bar shadcn-card">
-        <div className="welcome-section">
-          <h1>Good morning, <span className="gradient-text">Pastor John!</span> ✨</h1>
-          <p className="welcome-subtitle">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6 flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Good morning, <span className="bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] bg-clip-text text-transparent">Pastor John!</span> ✨
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">
             Ready to inspire your congregation today?
           </p>
         </div>
 
-        <div className="top-actions">
-          <button className="notification-btn shadcn-button-ghost shadcn-button-icon">
-            <Bell size={20} />
-            <span className="notification-badge shadcn-badge shadcn-badge-destructive">
+        <div className="flex space-x-2">
+          <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 relative group">
+            <Bell size={20} className="group-hover:bg-gradient-to-r group-hover:from-[#ff6b6b] group-hover:to-[#ffa36b] group-hover:bg-clip-text group-hover:text-transparent" />
+            <span className="absolute -top-1 -right-1 bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
               3
             </span>
           </button>
-          <button className="notification-btn shadcn-button-ghost shadcn-button-icon">
-            <MessageSquare size={20} />
+          <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 group">
+            <MessageSquare size={20} className="group-hover:bg-gradient-to-r group-hover:from-[#ff6b6b] group-hover:to-[#ffa36b] group-hover:bg-clip-text group-hover:text-transparent" />
           </button>
-          <button className="notification-btn shadcn-button-ghost shadcn-button-icon">
-            <HelpCircle size={20} />
+          <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 group">
+            <HelpCircle size={20} className="group-hover:bg-gradient-to-r group-hover:from-[#ff6b6b] group-hover:to-[#ffa36b] group-hover:bg-clip-text group-hover:text-transparent" />
           </button>
         </div>
       </div>
 
       {/* Quick Stats */}
-      <section className="quick-stats">
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         {stats.map((stat, index) => (
           <StatCard
             key={index}
@@ -139,16 +142,17 @@ export default function Dashboard() {
       </section>
 
       {/* Main Cards */}
-      <section className="main-cards">
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <SermonCard sermons={sermons} />
         <SeriesCard series={series} />
       </section>
 
       {/* Quick Actions Grid */}
-      <section className="quick-actions-grid">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {actions.map((action, index) => (
           <ActionCard
             key={index}
+            index={index}
             icon={action.icon}
             title={action.title}
             description={action.description}
@@ -156,5 +160,6 @@ export default function Dashboard() {
         ))}
       </section>
     </SidebarLayout>
+    </>
   );
 }

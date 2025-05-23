@@ -1,150 +1,466 @@
 /* Sermons Page Styles */
 .header {
-    background: white;
-    padding: 24px;
-    border-radius: 12px;
-    margin-bottom: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  }
-  
-  .header h1 {
-    font-size: 28px;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 8px;
-  }
-  
-  .header p {
-    color: #64748b;
-    font-size: 16px;
-  }
-  
-  /* Toolbar */
-  .toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-    gap: 16px;
-  }
-  
-  .toolbar-left {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-  }
-  
-  .search-box {
-    position: relative;
-    min-width: 300px;
-  }
-  
-  .search-box input {
-    width: 100%;
-    padding: 12px 16px 12px 40px;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    font-size: 14px;
-    background: white;
-  }
-  
-  .search-icon {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #64748b;
-  }
-  
-  .filter-dropdown {
-    padding: 12px 16px;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    background: white;
-    color: #64748b;
-    cursor: pointer;
-  }
-  
-  .btn {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.2s;
-  }
-  
-  .btn-primary {
-    background: linear-gradient(90deg, #ff6b6b 0%, #ffa36b 100%);
-    color: white;
-    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.2);
-  }
-  
-  .btn-primary:hover {
-    background: linear-gradient(90deg, #ff5252 0%, #ff9248 100%);
-    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
-    transform: translateY(-1px);
-  }
-  
-  .btn-secondary {
-    background: white;
-    color: #64748b;
-    border: 1px solid #e2e8f0;
-  }
-  
-  .btn-secondary:hover {
-    background: #f8fafc;
-  }
-  
-  /* Sermons List */
-  .sermons-list {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    overflow: hidden;
-  }
-  
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dark .header {
+  background: #1f2937;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+  transition: color 0.3s ease;
+}
+
+.dark .header h1 {
+  color: #f9fafb;
+}
+
+.header p {
+  color: #64748b;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.dark .header p {
+  color: #9ca3af;
+}
+
+.series-tag {
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+}
+
+.dark .series-tag {
+  background: #374151;
+  color: #d1d5db;
+}
+
+.sermon-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.sermon-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 4px;
+  transition: color 0.3s ease;
+}
+
+.dark .sermon-title {
+  color: #f9fafb;
+}
+
+.sermon-date {
+  font-size: 13px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  transition: color 0.3s ease;
+}
+
+.dark .sermon-date {
+  color: #9ca3af;
+}
+
+.sermon-scripture {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 4px;
+  transition: color 0.3s ease;
+}
+
+.dark .sermon-scripture {
+  color: #9ca3af;
+}
+
+.sermon-stats {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: #94a3b8;
+  transition: color 0.3s ease;
+}
+
+.dark .sermon-stats {
+  color: #6b7280;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.toolbar-left {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.search-box {
+  position: relative;
+  min-width: 300px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 12px 16px 12px 40px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  color: #1f2937;
+  transition: all 0.3s ease;
+}
+
+.dark .search-box input {
+  background: #374151;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+.dark .search-box input::placeholder {
+  color: #9ca3af;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+}
+
+.filter-dropdown {
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dark .filter-dropdown {
+  background: #374151;
+  border-color: #4b5563;
+  color: #d1d5db;
+}
+
+.btn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, #ff6b6b 0%, #ffa36b 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.2);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(90deg, #ff5252 0%, #ff9248 100%);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: white;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: #f8fafc;
+}
+
+.dark .btn-secondary {
+  background: #374151;
+  border-color: #4b5563;
+  color: #d1d5db;
+}
+
+.dark .btn-secondary:hover {
+  background: #4b5563;
+}
+
+.media-video {
+  background: #f0fdf4;
+  color: #166534;
+  transition: all 0.3s ease;
+}
+
+.dark .media-video {
+  background: #14532d;
+  color: #bbf7d0;
+}
+
+.media-slides {
+  background: #e0f2fe;
+  color: #0369a1;
+  transition: all 0.3s ease;
+}
+
+.dark .media-slides {
+  background: #1e3a8a;
+  color: #bfdbfe;
+}
+
+/* Sermons List */
+.sermons-list {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dark .sermons-list {
+  background: #1f2937;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.sermon-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 1.25rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  gap: 1.5rem;
+  position: relative;
+  border-bottom: 1px solid transparent;
+  background-image: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899, #f59e0b);
+  background-size: 100% 1px;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-origin: padding-box;
+  margin-bottom: -1px;
+}
+
+.media-preview-container {
+  flex: 0 0 180px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #f8fafc;
+  aspect-ratio: 16/9;
+}
+
+.media-preview-container .slide-preview {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+  transition: transform 0.2s ease;
+}
+
+.media-preview-container:hover .slide-preview {
+  transform: scale(1.03);
+}
+
+.sermon-row:last-child {
+  border-bottom: none;
+}
+
+.sermon-row:hover {
+  background-color: #f8fafc;
+}
+
+.dark .sermon-row {
+  border-bottom-color: #374151;
+}
+
+.dark .sermon-row:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.sermon-content {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.sermon-row .media-indicators {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.375rem;
+  flex-wrap: wrap;
+}
+
+.sermon-row .media-indicator {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.375rem;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.sermon-row .series-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.sermon-row .sermon-stats {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+  transition: color 0.2s ease;
+}
+
+.dark .sermon-row .sermon-stats {
+  color: #9ca3af;
+}
+
+.sermon-row .sermon-actions {
+  margin-left: auto;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.sermon-row:hover .sermon-actions {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
   .sermon-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .sermon-row .media-indicators {
+    flex-wrap: wrap;
+  }
+  
+  .sermon-row .sermon-stats {
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+  }
+}
+
+.sermon-row:last-child {
+  border-bottom: none;
+}
+
+/* Title Slide Preview */
+.slide-preview {
+  width: 120px;
+  height: 68px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  padding: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.slide-preview:hover {
+  transform: scale(1.05);
+}
+
+.slide-preview.published {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.slide-preview.draft {
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  color: #8b4513;
+}
+
+/* Media indicators */
+  .media-indicators {
     display: flex;
-    align-items: center;
-    padding: 20px;
-    border-bottom: 1px solid #f1f5f9;
-    transition: all 0.2s;
-    cursor: pointer;
-    gap: 20px;
+    gap: 8px;
+    margin-top: 8px;
   }
   
-  .sermon-row:hover {
-    background-color: #f8fafc;
+  .media-indicator {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
   }
   
-  .sermon-row:last-child {
-    border-bottom: none;
+  .media-slides {
+    background: #e0f2fe;
+    color: #0369a1;
   }
   
-  /* Title Slide Preview */
-  .slide-preview {
-    width: 120px;
-    height: 68px;
-    border-radius: 8px;
-    overflow: hidden;
-    flex-shrink: 0;
-    position: relative;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 12px;
-    font-weight: 600;
-    text-align: center;
-    padding: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease;
+  .media-video {
+    background: #f0fdf4;
+    color: #166534;
+  }
+  
+  .media-notes {
+    background: #fef2f2;
+    color: #991b1b;
+  }
+  
+  .dark .media-slides {
+    background: #1e3a8a;
+    color: #bfdbfe;
+  }
+  
+  .dark .media-video {
+    background: #14532d;
+    color: #bbf7d0;
+  }
+  
+  .dark .media-notes {
+    background: #7f1d1d;
+    color: #fecaca;
   }
   
   .slide-preview:hover {

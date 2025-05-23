@@ -11,8 +11,12 @@ import {
   Target,
   Settings,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  HelpCircle,
+  Moon,
+  Sun
 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 export default function Sidebar({ isCollapsed, isMobileOpen, onToggle }) {
   const pathname = usePathname();
@@ -22,9 +26,28 @@ export default function Sidebar({ isCollapsed, isMobileOpen, onToggle }) {
     { path: '/sermons', icon: <Book size={20} />, label: 'Sermons' },
     { path: '/series', icon: <BookOpen size={20} />, label: 'Series' },
     { path: '/team', icon: <Users size={20} />, label: 'Team' },
-    { path: '/resources', icon: <Target size={20} />, label: 'Resources' },
-    { path: '/settings', icon: <Settings size={20} />, label: 'Settings' }
+    { path: '/resources', icon: <Target size={20} />, label: 'Resources' }
   ];
+
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    // Check for dark mode preference
+    if (typeof window !== 'undefined') {
+      const isDark = localStorage.getItem('darkMode') === 'true' || 
+                   (!localStorage.getItem('darkMode') && 
+                    window.matchMedia('(prefers-color-scheme: dark)').matches);
+      setDarkMode(isDark);
+      document.documentElement.classList.toggle('dark', isDark);
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    localStorage.setItem('darkMode', newDarkMode);
+    document.documentElement.classList.toggle('dark', newDarkMode);
+  };
 
   return (
     <nav
@@ -69,6 +92,35 @@ export default function Sidebar({ isCollapsed, isMobileOpen, onToggle }) {
         ))}
       </ul>
 
+      {/* Utility Icons */}
+      <div className="utility-section">
+        <button 
+          className="utility-icon" 
+          title="Settings"
+          onClick={() => window.location.href = '/settings'}
+        >
+          <Settings size={20} />
+          <span className="utility-tooltip">Settings</span>
+        </button>
+        <button 
+          className="utility-icon" 
+          title="Help & Support"
+          onClick={() => window.location.href = '/help'}
+        >
+          <HelpCircle size={20} />
+          <span className="utility-tooltip">Help</span>
+        </button>
+        <button 
+          className="utility-icon" 
+          title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          onClick={toggleDarkMode}
+        >
+          {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+          <span className="utility-tooltip">{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
+        </button>
+      </div>
+
+      {/* User Section */}
       <div className="user-section shadcn-card">
         <div className="user-info">
           <div className="user-avatar">PJ</div>
