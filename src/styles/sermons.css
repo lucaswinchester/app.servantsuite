@@ -1,0 +1,162 @@
+/* Sermons Page Styles */
+.header {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 8px;
+  }
+  
+  .header p {
+    color: #64748b;
+    font-size: 16px;
+  }
+  
+  /* Toolbar */
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    gap: 16px;
+  }
+  
+  .toolbar-left {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  
+  .search-box {
+    position: relative;
+    min-width: 300px;
+  }
+  
+  .search-box input {
+    width: 100%;
+    padding: 12px 16px 12px 40px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    background: white;
+  }
+  
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+  }
+  
+  .filter-dropdown {
+    padding: 12px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: white;
+    color: #64748b;
+    cursor: pointer;
+  }
+  
+  .btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+  
+  .btn-primary {
+    background: linear-gradient(90deg, #ff6b6b 0%, #ffa36b 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.2);
+  }
+  
+  .btn-primary:hover {
+    background: linear-gradient(90deg, #ff5252 0%, #ff9248 100%);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+    transform: translateY(-1px);
+  }
+  
+  .btn-secondary {
+    background: white;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .btn-secondary:hover {
+    background: #f8fafc;
+  }
+  
+  /* Sermons List */
+  .sermons-list {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    overflow: hidden;
+  }
+  
+  .sermon-row {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #f1f5f9;
+    transition: all 0.2s;
+    cursor: pointer;
+    gap: 20px;
+  }
+  
+  .sermon-row:hover {
+    background-color: #f8fafc;
+  }
+  
+  .sermon-row:last-child {
+    border-bottom: none;
+  }
+  
+  /* Title Slide Preview */
+  .slide-preview {
+    width: 120px;
+    height: 68px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    padding: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+  }
+  
+  .slide-preview:hover {
+    transform: scale(1.05);
+  }
+  
+  .slide-preview.published {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  }
+  
+  .slide-preview.draft {
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    color: #8b4513;
+  }
+    
