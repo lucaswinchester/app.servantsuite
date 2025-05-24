@@ -6,6 +6,7 @@ import StatCard from '../../components/dashboard/StatCard';
 import SermonCard from '../../components/dashboard/SermonCard';
 import SeriesCard from '../../components/dashboard/SeriesCard';
 import ActionCard from '../../components/dashboard/ActionCard';
+import PageHeader from '../../components/layout/PageHeader';
 import {
   Bell,
   MessageSquare,
@@ -102,31 +103,7 @@ export default function Dashboard() {
     <>
       <SidebarLayout>
       {/* Top Bar */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6 flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Good morning, <span className="bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] bg-clip-text text-transparent">Pastor John!</span> ✨
-          </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">
-            Ready to inspire your congregation today?
-          </p>
-        </div>
-
-        <div className="flex space-x-2">
-          <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 relative group">
-            <Bell size={20} className="group-hover:bg-gradient-to-r group-hover:from-[#ff6b6b] group-hover:to-[#ffa36b] group-hover:bg-clip-text group-hover:text-transparent" />
-            <span className="absolute -top-1 -right-1 bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-              3
-            </span>
-          </button>
-          <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 group">
-            <MessageSquare size={20} className="group-hover:bg-gradient-to-r group-hover:from-[#ff6b6b] group-hover:to-[#ffa36b] group-hover:bg-clip-text group-hover:text-transparent" />
-          </button>
-          <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 group">
-            <HelpCircle size={20} className="group-hover:bg-gradient-to-r group-hover:from-[#ff6b6b] group-hover:to-[#ffa36b] group-hover:bg-clip-text group-hover:text-transparent" />
-          </button>
-        </div>
-      </div>
+      <PageHeader title={`Good morning, <span class="bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] bg-clip-text text-transparent">Pastor John!</span> ✨`} subtitle="Ready to inspire your congregation today?" />
 
       {/* Quick Stats */}
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">

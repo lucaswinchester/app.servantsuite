@@ -57,9 +57,19 @@ export default function Sidebar({ isCollapsed, isMobileOpen, onToggle }) {
       id="sidebar"
     >
       <div className="logo-section">
-        <div className="logo">
-          <div className="flame-icon"></div>
-          <span className="logo-text">ServantSuite</span>
+        <div className="logo flex items-center">
+          <div className="w-8 h-8 flex-shrink-0">
+            <img 
+              src="/ss-icon.svg" 
+              alt="ServantSuite Logo" 
+              className="w-full h-full"
+            />
+          </div>
+          {!isCollapsed && (
+            <span className="logo-text font-semibold text-2xl ml-2">
+              ServantSuite
+            </span>
+          )}
         </div>
         <button
           className="toggle-sidebar"

@@ -5,6 +5,7 @@ import SidebarLayout from '../../components/layout/SidebarLayout';
 import SermonRow from '../../components/sermons/SermonRow';
 import SearchBox from '../../components/ui/SearchBox';
 import Button from '../../components/ui/Button';
+import PageHeader from '../../components/layout/PageHeader';
 import {
   Search,
   Upload,
@@ -36,11 +37,11 @@ export default function SermonsPage() {
         { type: 'video', label: 'Video' },
         { type: 'notes', label: 'Notes' }
       ],
-      stats: [
-        '👥 2,450 views',
-        '⏱️ 42 min',
-        '💬 23 comments'
-      ],
+      serviceType: 'Sunday Morning',
+      sermonService: 'Main Service',
+      commentCount: 23,
+      duration: '42 min',
+      viewCount: 2450,
       actions: [
         { icon: <Edit size={14} />, label: 'Edit', primary: true },
         { icon: <Eye size={14} />, label: 'View' },
@@ -68,6 +69,8 @@ export default function SermonsPage() {
         '⏱️ 38 min',
         '💬 15 comments'
       ],
+      serviceType: 'Sunday Morning',
+      sermonService: 'Main Service',
       actions: [
         { icon: <Edit size={14} />, label: 'Edit', primary: true },
         { icon: <Eye size={14} />, label: 'View' },
@@ -93,6 +96,8 @@ export default function SermonsPage() {
         '⏱️ Est. 35 min',
         '🎯 Due May 24'
       ],
+      serviceType: 'Sunday Morning',
+      sermonService: 'Main Service',
       actions: [
         { icon: <Edit size={14} />, label: 'Edit', primary: true },
         { icon: <Eye size={14} />, label: 'View' },
@@ -114,11 +119,11 @@ export default function SermonsPage() {
         { type: 'video', label: 'Video' },
         { type: 'notes', label: 'Notes' }
       ],
-      stats: [
-        '✅ Ready to publish',
-        '⏱️ 40 min',
-        '📅 Auto-publish June 2'
-      ],
+      serviceType: 'Sunday Evening',
+      sermonService: 'Evening Service',
+      commentCount: 0,
+      duration: '40 min',
+      viewCount: 0,
       actions: [
         { icon: <Edit size={14} />, label: 'Edit', primary: true },
         { icon: <Eye size={14} />, label: 'View' },
@@ -141,11 +146,11 @@ export default function SermonsPage() {
         { type: 'audio', label: 'Audio' },
         { type: 'notes', label: 'Notes' }
       ],
-      stats: [
-        '👥 3,120 views',
-        '⏱️ 45 min',
-        '💬 31 comments'
-      ],
+      serviceType: 'Sunday Morning',
+      sermonService: 'Main Service',
+      commentCount: 31,
+      duration: '45 min',
+      viewCount: 3120,
       actions: [
         { icon: <Edit size={14} />, label: 'Edit', primary: true },
         { icon: <Eye size={14} />, label: 'View' },
@@ -167,11 +172,11 @@ export default function SermonsPage() {
         { type: 'slides', label: '3 Slides' },
         { type: 'notes', label: 'Notes' }
       ],
-      stats: [
-        '📝 20% complete',
-        '⏱️ Est. 42 min',
-        '💡 Research phase'
-      ],
+      serviceType: 'Wednesday',
+      sermonService: 'Bible Study',
+      commentCount: 0,
+      duration: 'Est. 42 min',
+      viewCount: 0,
       actions: [
         { icon: <Edit size={14} />, text: 'Continue', label: 'Continue', primary: true },
         { icon: <BookOpen size={14} />, text: 'Research', label: 'Research' },
@@ -197,32 +202,47 @@ export default function SermonsPage() {
 
   return (
     <SidebarLayout>
-      <div className="header">
-        <h1>Your Sermons</h1>
-        <p>Manage and organize your sermon library</p>
-      </div>
+      <PageHeader 
+        title={`Preach it, <span class="bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] bg-clip-text text-transparent">Pastor</span>! 🎙️✨`} 
+        subtitle="Craft, organize, and share your messages with the world. Every word matters!" 
+      />
 
       {/* Toolbar */}
-      <div className="toolbar">
-        <div className="toolbar-left">
+      <div className="toolbar flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
           <SearchBox 
             placeholder="Search sermons by title, scripture, or topic..."
             onChange={handleSearch}
+            className="w-full sm:w-64"
           />
-          <select className="filter-dropdown">
-            <option>All Sermons</option>
-            <option>Published</option>
-            <option>Draft</option>
-            <option>Scheduled</option>
-          </select>
-          <select className="filter-dropdown">
-            <option>All Series</option>
-            <option>Summer of Hope</option>
-            <option>Back to Basics</option>
-            <option>Finding Purpose</option>
-          </select>
+          <div className="relative">
+            <select className="w-full pl-4 pr-10 py-3 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] focus:border-transparent cursor-pointer appearance-none">
+              <option>All Sermons</option>
+              <option>Published</option>
+              <option>Draft</option>
+              <option>Scheduled</option>
+            </select>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+          <div className="relative">
+            <select className="w-full pl-4 pr-10 py-3 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] focus:border-transparent cursor-pointer appearance-none">
+              <option>All Series</option>
+              <option>Summer of Hope</option>
+              <option>Back to Basics</option>
+              <option>Finding Purpose</option>
+            </select>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: '12px' }}>
+        <div className="flex gap-3 w-full sm:w-auto">
           <Button variant="secondary">
             <Upload size={16} /> Import
           </Button>

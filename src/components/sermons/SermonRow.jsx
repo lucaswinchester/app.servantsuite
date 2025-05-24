@@ -1,7 +1,5 @@
 import React from 'react';
 import SlidePreview from './SlidePreview';
-import SermonActions from './SermonActions';
-import StatusBadge from '../ui/StatusBadge';
 import { BookOpen, Calendar, Users, Clock, MessageSquare } from 'lucide-react';
 
 export default function SermonRow({ sermon, onSermonClick, onActionClick }) {
@@ -10,8 +8,11 @@ export default function SermonRow({ sermon, onSermonClick, onActionClick }) {
       <div className="media-preview-container">
         <SlidePreview 
           title={sermon.slideTitle} 
-          status={sermon.status} 
-          icon={sermon.icon}
+          status={sermon.status}
+          actions={sermon.actions?.map(action => ({
+            ...action,
+            onClick: (e) => onActionClick(action, e)
+          })) || []}
         />
       </div>
       
@@ -20,12 +21,9 @@ export default function SermonRow({ sermon, onSermonClick, onActionClick }) {
           <div className="flex-1">
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <h3 className="sermon-title text-base font-medium text-gray-900 dark:text-white truncate">
-                    {sermon.title}
-                  </h3>
-                  <StatusBadge status={sermon.status} />
-                </div>
+                <h3 className="text-base font-medium text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  {sermon.title}
+                </h3>
                 <div className="sermon-scripture flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 mt-0.5">
                   <BookOpen size={14} className="flex-shrink-0" /> 
                   <span className="truncate">{sermon.scripture}</span>
@@ -55,19 +53,44 @@ export default function SermonRow({ sermon, onSermonClick, onActionClick }) {
           <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
             <div className="flex items-start justify-between">
               <div className="sermon-stats flex-1 flex items-center gap-6 text-xs text-gray-500 dark:text-gray-400">
-                {sermon.stats.map((stat, index) => (
-                  <span key={index} className="flex items-center gap-1">
-                    {stat.startsWith('👥') && <Users size={12} className="opacity-70" />}
-                    {stat.startsWith('⏱️') && <Clock size={12} className="opacity-70" />}
-                    {stat.startsWith('💬') && <MessageSquare size={12} className="opacity-70" />}
-                    <span className="whitespace-nowrap">{stat.replace(/^[^\s]+\s*/, '')}</span>
+                {/* Status */}
+                <span className="flex items-center gap-1">
+                  <span className={`inline-block w-2 h-2 rounded-full ${
+                    sermon.status === 'Draft' ? 'bg-yellow-500' :
+                    sermon.status === 'Scheduled' ? 'bg-blue-500' :
+                    'bg-green-500'
+                  }`}></span>
+                  <span className="whitespace-nowrap">{sermon.status}</span>
+                </span>
+                
+                {/* Service Type */}
+                <span className="flex items-center gap-1">
+                  <Clock size={12} className="opacity-70" />
+                  <span className="whitespace-nowrap">
+                    {sermon.serviceType || 'No Service Type'}
                   </span>
-                ))}
+                </span>
+                
+                {/* Sermon Service */}
+                <span className="flex items-center gap-1">
+                  <Users size={12} className="opacity-70" />
+                  <span className="whitespace-nowrap">
+                    {sermon.sermonService || 'General'}
+                  </span>
+                </span>
+                
+                {/* Comments */}
+                <span className="flex items-center gap-1">
+                  <MessageSquare size={12} className="opacity-70" />
+                  <span className="whitespace-nowrap">
+                    {sermon.commentCount || 0} {sermon.commentCount === 1 ? 'Comment' : 'Comments'}
+                  </span>
+                </span>
               </div>
               
-              <div className="flex items-center">
-                {sermon.media && sermon.media.length > 0 && (
-                  <div className="flex items-center gap-1.5 mr-2">
+              {sermon.media && sermon.media.length > 0 && (
+                <div className="flex items-center justify-end">
+                  <div className="flex items-center gap-1.5">
                     {sermon.media.map((media, index) => (
                       <span 
                         key={index} 
@@ -77,17 +100,8 @@ export default function SermonRow({ sermon, onSermonClick, onActionClick }) {
                       </span>
                     ))}
                   </div>
-                )}
-                
-                <SermonActions 
-                  actions={sermon.actions} 
-                  onActionClick={(action, e) => {
-                    e.stopPropagation();
-                    onActionClick(action, e);
-                  }}
-                  className="opacity-0 group-hover:opacity-100 transition-opacity"
-                />
-              </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

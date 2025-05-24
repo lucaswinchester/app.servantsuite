@@ -1,12 +1,9 @@
-/* Tailwind base styles */
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-/* Base styles */
 @layer base {
   :root {
     --foreground-rgb: 0, 0, 0;
@@ -14,17 +11,59 @@
   }
   
   body {
-    @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-white;
+    @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-sans;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 }
 
-/* Custom styles */
 @layer components {
-  /* Add any custom component styles here */
+  .search-box {
+    @apply relative min-w-[300px];
+  }
+  
+  .search-box input {
+    @apply w-full py-3 pl-10 pr-4 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] focus:border-transparent transition-colors;
+  }
+  
+  .search-icon {
+    @apply absolute left-3 top-1/2 -translate-y-1/2 text-gray-400;
+  }
+  
+  .sermon-row {
+    @apply bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 mb-4 hover:shadow-md transition-shadow cursor-pointer;
+  }
+  
+  .toolbar {
+    @apply flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6;
+  }
+  
+  .toolbar-left {
+    @apply flex flex-col sm:flex-row gap-3 w-full sm:w-auto;
+  }
+  
+  .toolbar-right {
+    @apply w-full sm:w-auto flex justify-end;
+  }
+  
+  .filter-dropdown {
+    @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md px-3 py-2 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+  }
+  
+  .btn {
+    @apply px-4 py-2 rounded-md font-medium transition-colors;
+  }
+  
+  .btn-primary {
+    @apply bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] text-white hover:opacity-90;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600;
+  }
 }
 
-/* Custom utilities */
 @layer utilities {
-  /* Add any custom utilities here */
+  .text-balance {
+    text-wrap: balance;
+  }
 }
