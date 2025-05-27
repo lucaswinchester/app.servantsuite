@@ -1,6 +1,7 @@
 import './globals.css';
 import { Suspense } from 'react';
 import { Inter } from 'next/font/google';
+import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeWrapper } from '@/components/theme/theme-wrapper';
 import { SidebarProvider } from '@/context/SidebarContext';
 import SidebarLayout from '@/components/layout/SidebarLayout';
@@ -43,15 +44,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-full bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 antialiased">
-        <ThemeWrapper>
-          <SidebarProvider>
-            <SidebarLayout>
-              <Suspense fallback={null}>
-                {children}
-              </Suspense>
-            </SidebarLayout>
-          </SidebarProvider>
-        </ThemeWrapper>
+        <ClerkProvider>
+          <ThemeWrapper>
+            <SidebarProvider>
+              <SidebarLayout>
+                <Suspense fallback={null}>
+                  {children}
+                </Suspense>
+              </SidebarLayout>
+            </SidebarProvider>
+          </ThemeWrapper>
+        </ClerkProvider>
       </body>
     </html>
   )

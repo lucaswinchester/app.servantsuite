@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import StatCard from '../../components/dashboard/StatCard';
 import SermonCard from '../../components/dashboard/SermonCard';

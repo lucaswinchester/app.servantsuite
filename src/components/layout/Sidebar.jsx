@@ -12,9 +12,21 @@ import {
   ChevronLeft,
   HelpCircle, 
   Moon, 
-  Sun 
+  Sun,
+  LogOut,
+  User,
+  ChevronDown
 } from 'lucide-react';
 import { useSidebar } from '../../context/SidebarContext';
+import { UserButton, useUser } from '@clerk/nextjs';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -24,10 +36,23 @@ export default function Sidebar() {
     toggleSidebar, 
     closeMobileMenu 
   } = useSidebar();
+  const { user, isLoaded } = useUser();
+  
   // Close mobile menu when path changes
   useEffect(() => {
     closeMobileMenu();
   }, [pathname, closeMobileMenu]);
+  
+  // Get user initials for avatar
+  const getUserInitials = () => {
+    if (!isLoaded || !user) return 'U';
+    return `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}` || user.emailAddresses[0]?.emailAddress[0].toUpperCase() || 'U';
+  };
+  
+  const getUserName = () => {
+    if (!isLoaded || !user) return 'User';
+    return user.fullName || user.emailAddresses[0]?.emailAddress || 'User';
+  };
 
   const navItems = [
     { path: '/dashboard', icon: <Home size={20} />, label: 'Dashboard' },
@@ -189,21 +214,57 @@ export default function Sidebar() {
 
       {/* User Section - Pinned to bottom */}
       <div className={`mt-auto border-t border-gray-100 dark:border-gray-800 transition-all duration-300 ${isCollapsed ? 'px-2' : 'px-4'}`}>
-        <div className={`py-3 flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'}`}>
-          <div 
-            className={`flex-shrink-0 rounded-full bg-gradient-to-br from-[#ff6b6b] to-[#ffa36b] text-white flex items-center justify-center font-medium shadow-sm
-              ${isCollapsed ? 'h-9 w-9 text-sm' : 'h-10 w-10 text-sm'}`}
-            title={isCollapsed ? 'Pastor John' : ''}
-          >
-            PJ
-          </div>
-          {!isCollapsed && (
-            <div className="min-w-0">
-              <h4 className="text-sm font-medium text-gray-900 dark:text-white truncate">Pastor John</h4>
-              <p className="text-xs text-gray-500 dark:text-gray-400 truncate">Grace Community</p>
-            </div>
-          )}
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className={`w-full py-3 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors`}>
+              <div className="flex items-center gap-3">
+                <div className="flex-shrink-0 rounded-full bg-gradient-to-br from-[#ff6b6b] to-[#ffa36b] text-white flex items-center justify-center font-medium shadow-sm h-9 w-9 text-sm">
+                  {isLoaded && user ? (
+                    <UserButton 
+                      appearance={{
+                        elements: {
+                          avatarBox: 'h-9 w-9',
+                        },
+                      }}
+                    />
+                  ) : (
+                    <span>{getUserInitials()}</span>
+                  )}
+                </div>
+                {!isCollapsed && (
+                  <div className="text-left min-w-0">
+                    <h4 className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                      {getUserName()}
+                    </h4>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                      {user?.primaryEmailAddress?.emailAddress || 'User'}
+                    </p>
+                  </div>
+                )}
+              </div>
+              {!isCollapsed && (
+                <ChevronDown className="h-4 w-4 text-gray-400" />
+              )}
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-56">
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <User className="mr-2 h-4 w-4" />
+              <span>Profile</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Sign out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );

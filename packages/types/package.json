@@ -1,0 +1,21 @@
+{
+  "name": "@servantsuite/types",
+  "version": "0.1.0",
+  "private": true,
+  "main": "",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "lint": "eslint . --ext .ts,.tsx"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-custom": "*",
+    "tsconfig": "*",
+    "typescript": "^5.3.0"
+  }
+}
