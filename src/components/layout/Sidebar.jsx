@@ -9,8 +9,7 @@ import {
   BookOpen, 
   Users, 
   Settings, 
-  ChevronLeft, 
-  ChevronRight, 
+  ChevronLeft,
   HelpCircle, 
   Moon, 
   Sun 
@@ -70,20 +69,19 @@ export default function Sidebar() {
               h-8 w-8 p-1.5 rounded-full
               bg-white dark:bg-gray-800
               shadow-lg border border-gray-200 dark:border-gray-600
-              hover:bg-blue-50 dark:hover:bg-blue-900/30
-              hover:border-blue-200 dark:hover:border-blue-800
-              hover:text-blue-600 dark:hover:text-blue-400
+              hover:bg-orange-50 dark:hover:bg-orange-900
+              hover:border-orange-200 dark:hover:border-orange-600
+              hover:text-orange-600 dark:hover:text-orange-400
               transition-all duration-200 ease-out
               flex items-center justify-center
-              focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2
-              ${isCollapsed ? 'rotate-180' : ''}
+              focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2
             `}
           >
-            {isCollapsed ? (
-              <ChevronRight size={16} strokeWidth={2.5} />
-            ) : (
-              <ChevronLeft size={16} strokeWidth={2.5} />
-            )}
+            <ChevronLeft 
+              size={16} 
+              strokeWidth={2.5} 
+              className={`transition-transform duration-200 ${isCollapsed ? 'rotate-180' : ''}`} 
+            />
           </button>
         </div>
 
