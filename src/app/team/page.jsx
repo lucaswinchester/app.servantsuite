@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Head from 'next/head';
-import SidebarLayout from '@/components/layout/SidebarLayout';
 import Button from '@/components/ui/Button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
 import PageHeader from '@/components/layout/PageHeader';
@@ -212,46 +211,44 @@ export default function TeamManagement() {
       <Head>
         <title>Team Management | ServantSuite</title>
       </Head>
-      <SidebarLayout>
-        <PageHeader 
-          title={
-            <>
-              The{' '}
-              <span className="bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] bg-clip-text text-transparent">
-                Servant Squad
-              </span>
-              !
-            </>
-          } 
-          subtitle="Manage your team members and their permissions" 
-        />
-        <div className="space-y-8">
-          <Tabs 
-            defaultValue="members" 
-            className="w-full"
-            onValueChange={setActiveTab}
-            value={activeTab}
-          >
-            <TabsList className="mb-4">
-              <TabsTrigger value="members">Team Members</TabsTrigger>
-              <TabsTrigger value="roles">Roles & Permissions</TabsTrigger>
-              <TabsTrigger value="invites">Pending Invites</TabsTrigger>
-            </TabsList>
+      <PageHeader 
+        title={
+          <>
+            The{' '}
+            <span className="bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] bg-clip-text text-transparent">
+              Servant Squad
+            </span>
+            !
+          </>
+        } 
+        subtitle="Manage your team members and their permissions" 
+      />
+      <div className="space-y-8">
+        <Tabs 
+          defaultValue="members" 
+          className="w-full"
+          onValueChange={setActiveTab}
+          value={activeTab}
+        >
+          <TabsList className="mb-4">
+            <TabsTrigger value="members">Team Members</TabsTrigger>
+            <TabsTrigger value="roles">Roles & Permissions</TabsTrigger>
+            <TabsTrigger value="invites">Pending Invites</TabsTrigger>
+          </TabsList>
 
-            <TabsContent value="members">
-              {renderMembersTab()}
-            </TabsContent>
-            
-            <TabsContent value="roles">
-              {renderRolesTab()}
-            </TabsContent>
-            
-            <TabsContent value="invites">
-              {renderInvitesTab()}
-            </TabsContent>
-          </Tabs>
-        </div>
-      </SidebarLayout>
+          <TabsContent value="members">
+            {renderMembersTab()}
+          </TabsContent>
+          
+          <TabsContent value="roles">
+            {renderRolesTab()}
+          </TabsContent>
+          
+          <TabsContent value="invites">
+            {renderInvitesTab()}
+          </TabsContent>
+        </Tabs>
+      </div>
     </>
   );
 };

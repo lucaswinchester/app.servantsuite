@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import SidebarLayout from '../../components/layout/SidebarLayout';
 import SermonRow from '../../components/sermons/SermonRow';
 import SearchBox from '../../components/ui/SearchBox';
 import Button from '../../components/ui/Button';
@@ -201,9 +200,13 @@ export default function SermonsPage() {
   };
 
   return (
-    <SidebarLayout>
+    <div className="sermons-page">
       <PageHeader 
-        title={`Preach it, <span class="bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] bg-clip-text text-transparent">Pastor</span>! 🎙️✨`} 
+        title={
+          <>
+            Preach it, <span className="bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] bg-clip-text text-transparent">Pastor</span>! 🎙️✨
+          </>
+        } 
         subtitle="Craft, organize, and share your messages with the world. Every word matters!" 
       />
 
@@ -263,6 +266,6 @@ export default function SermonsPage() {
           />
         ))}
       </div>
-    </SidebarLayout>
+    </div>
   );
 }

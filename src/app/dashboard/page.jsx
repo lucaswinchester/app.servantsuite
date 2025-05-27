@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import SidebarLayout from '../../components/layout/SidebarLayout';
 import StatCard from '../../components/dashboard/StatCard';
 import SermonCard from '../../components/dashboard/SermonCard';
 import SeriesCard from '../../components/dashboard/SeriesCard';
@@ -101,7 +100,6 @@ export default function Dashboard() {
 
   return (
     <>
-      <SidebarLayout>
       {/* Top Bar */}
       <PageHeader title={`Good morning, <span class="bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] bg-clip-text text-transparent">Pastor John</span>! ✨`} subtitle="Ready to inspire your congregation today?" />
 
@@ -136,7 +134,6 @@ export default function Dashboard() {
           />
         ))}
       </section>
-    </SidebarLayout>
     </>
   );
 }

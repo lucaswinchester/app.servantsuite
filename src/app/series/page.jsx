@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from 'react';
-import SidebarLayout from '../../components/layout/SidebarLayout';
 import PageHeader from '../../components/layout/PageHeader';
 import SearchBox from '../../components/ui/SearchBox';
 import Button from '../../components/ui/Button';
@@ -72,7 +71,7 @@ export default function SeriesPage() {
   };
 
   return (
-    <SidebarLayout>
+    <>
       <PageHeader 
         title={
           <>
@@ -157,6 +156,6 @@ export default function SeriesPage() {
           </div>
         </div>
       )}
-    </SidebarLayout>
+    </>
   );
 }
