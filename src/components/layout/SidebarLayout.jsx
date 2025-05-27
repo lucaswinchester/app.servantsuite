@@ -1,82 +1,57 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { SidebarProvider, useSidebar } from '../../context/SidebarContext';
 import Sidebar from './Sidebar';
-import MobileMenuToggle from './MobileMenuToggle';
 import '../../styles/sidebar.css';
 
 export default function SidebarLayout({ children }) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  return (
+    <SidebarProvider>
+      <LayoutWithSidebar>{children}</LayoutWithSidebar>
+    </SidebarProvider>
+  );
+}
 
-  const toggleSidebar = () => {
-    setSidebarCollapsed(!sidebarCollapsed);
-  };
+function LayoutWithSidebar({ children }) {
+  const { isCollapsed } = useSidebar();
 
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
-
-  // Close sidebar when clicking outside on mobile
+  // Update document body class when sidebar state changes
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (window.innerWidth <= 768) {
-        const sidebar = document.getElementById("sidebar");
-        const mobileMenuToggle = document.getElementById("mobileMenuToggle");
-        
-        if (
-          sidebar &&
-          mobileMenuToggle &&
-          !sidebar.contains(e.target) &&
-          e.target !== mobileMenuToggle &&
-          !mobileMenuToggle.contains(e.target)
-        ) {
-          setMobileMenuOpen(false);
-        }
-      }
-    };
-
-    document.addEventListener("click", handleClickOutside);
+    if (isCollapsed) {
+      document.body.classList.add('sidebar-collapsed');
+      document.body.classList.remove('sidebar-expanded');
+    } else {
+      document.body.classList.add('sidebar-expanded');
+      document.body.classList.remove('sidebar-collapsed');
+    }
     
     return () => {
-      document.removeEventListener("click", handleClickOutside);
+      document.body.classList.remove('sidebar-collapsed', 'sidebar-expanded');
     };
-  }, []);
-
-  // Handle keyboard navigation for accessibility
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape" && mobileMenuOpen) {
-        setMobileMenuOpen(false);
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [mobileMenuOpen]);
+  }, [isCollapsed]);
 
   return (
-    <div className="app">
-      <MobileMenuToggle 
-        isOpen={mobileMenuOpen} 
-        onClick={toggleMobileMenu} 
-      />
-      
-      <Sidebar 
-        isCollapsed={sidebarCollapsed} 
-        isMobileOpen={mobileMenuOpen}
-        onToggle={toggleSidebar}
-      />
-
-      <main
-        className={`main-content ${sidebarCollapsed ? "expanded" : ""}`}
-        id="mainContent"
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
+      {/* Sidebar */}
+      <div 
+        className={`fixed inset-y-0 left-0 z-30 transform transition-all duration-300 ease-in-out ${
+          isCollapsed ? 'w-20' : 'w-[280px]'
+        }`}
       >
-        {children}
-      </main>
+        <Sidebar />
+      </div>
+
+      {/* Main Content */}
+      <div 
+        className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out ${
+          isCollapsed ? 'ml-20' : 'ml-[280px]'
+        }`}
+      >
+        <main className="flex-1 p-6">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

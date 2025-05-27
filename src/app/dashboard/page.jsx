@@ -103,7 +103,7 @@ export default function Dashboard() {
     <>
       <SidebarLayout>
       {/* Top Bar */}
-      <PageHeader title={`Good morning, <span class="bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] bg-clip-text text-transparent">Pastor John!</span> ✨`} subtitle="Ready to inspire your congregation today?" />
+      <PageHeader title={`Good morning, <span class="bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] bg-clip-text text-transparent">Pastor John</span>! ✨`} subtitle="Ready to inspire your congregation today?" />
 
       {/* Quick Stats */}
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">

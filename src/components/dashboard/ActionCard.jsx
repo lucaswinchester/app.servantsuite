@@ -21,7 +21,7 @@ export default function ActionCard({ icon, title, description, actionText = 'Get
         {React.cloneElement(icon, { size: 20, className: 'text-white' })}
       </div>
       
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">{title}</h3>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{description}</p>
       
       <div className="mt-4">

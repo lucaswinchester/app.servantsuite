@@ -9,7 +9,7 @@ export default function SeriesRow({ series, onSeriesClick, onActionClick }) {
           <div className="flex-1">
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0">
-                <h3 className="text-base font-medium text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                <h3 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent group-hover:from-blue-600 group-hover:to-blue-400 dark:group-hover:from-blue-400 dark:group-hover:to-blue-200 transition-all duration-300">
                   {series.title}
                 </h3>
                 <div className="sermon-scripture flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 mt-0.5">

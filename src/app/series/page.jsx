@@ -6,7 +6,7 @@ import PageHeader from '../../components/layout/PageHeader';
 import SearchBox from '../../components/ui/SearchBox';
 import Button from '../../components/ui/Button';
 import SeriesRow from '../../components/series/SeriesRow';
-import { Plus, BookOpen, MessageSquare } from 'lucide-react';
+import { Plus, BookOpen, MessageSquare, RefreshCw } from 'lucide-react';
 
 export default function SeriesPage() {
   // Sample series data
@@ -74,12 +74,20 @@ export default function SeriesPage() {
   return (
     <SidebarLayout>
       <PageHeader 
-        title={`Sermon Series <span class="bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] bg-clip-text text-transparent">Library</span> 📚`} 
+        title={
+          <>
+            Sermon Series{' '}
+            <span className="bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] bg-clip-text text-transparent">
+              Library
+            </span>{' '}
+            📚
+          </>
+        } 
         subtitle="Create and manage your sermon series to deliver powerful, connected messages" 
       />
 
       {/* Toolbar */}
-      <div className="toolbar flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+      <div className="toolbar flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
           <SearchBox 
             placeholder="Search series by title, topic, or scripture..."
@@ -113,8 +121,8 @@ export default function SeriesPage() {
             </div>
           </div>
         </div>
-        <div className="toolbar-right flex gap-3 w-full sm:w-auto">
-          <Button variant="primary">
+        <div className="flex gap-3 w-full sm:w-auto">
+          <Button variant="primary" className="gradient-button">
             <Plus size={16} className="mr-1.5" />
             New Series
           </Button>
@@ -122,7 +130,7 @@ export default function SeriesPage() {
       </div>
 
       {/* Series List */}
-      <div className="sermons-list">
+      <div className="sermons-list space-y-4">
         {series.map((seriesItem) => (
           <SeriesRow
             key={seriesItem.id}
@@ -142,10 +150,10 @@ export default function SeriesPage() {
             Get started by creating your first sermon series.
           </p>
           <div className="mt-6">
-            <button className="btn-primary">
+            <Button variant="primary">
               <Plus size={16} className="mr-2" />
               Create New Series
-            </button>
+            </Button>
           </div>
         </div>
       )}

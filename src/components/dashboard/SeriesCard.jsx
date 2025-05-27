@@ -1,5 +1,6 @@
 import React from 'react';
-import { BookOpen, Plus, Search, Download } from 'lucide-react';
+import { BookOpen, Plus, Search } from 'lucide-react';
+import Link from 'next/link';
 
 export default function SeriesCard({ series }) {
   return (
@@ -9,18 +10,18 @@ export default function SeriesCard({ series }) {
           <BookOpen size={20} className="mr-2 text-[#ff6b6b] dark:text-[#ffa36b]" />
           Series
         </h3>
-        <button className="text-sm font-medium bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] bg-clip-text text-transparent hover:opacity-80 transition-opacity">
+        <Link 
+          href="/series" 
+          className="text-sm font-medium bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] bg-clip-text text-transparent hover:opacity-80 transition-opacity"
+        >
           View All
-        </button>
+        </Link>
       </div>
       
       <div className="flex flex-wrap gap-2 mb-6">
-        <button className="inline-flex items-center px-4 py-1.5 text-sm font-medium rounded-full bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] text-white hover:opacity-90 transition-opacity">
+        <Link href="/series/new" className="inline-flex items-center px-4 py-1.5 text-sm font-medium rounded-full bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] text-white hover:opacity-90 transition-opacity">
           <span className="mr-1">✨</span> Create New
-        </button>
-        <button className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-full bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-          <Download size={14} className="mr-1" /> Import
-        </button>
+        </Link>
         <button className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-full bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
           <Search size={14} className="mr-1" /> Search
         </button>
@@ -49,14 +50,6 @@ export default function SeriesCard({ series }) {
             )}
           </div>
         ))}
-      </div>
-      
-      <div className="mt-6 flex justify-end">
-        <button 
-          className="px-3 py-1.5 text-sm font-medium bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] text-white rounded-md hover:opacity-90 transition-opacity"
-        >
-          View All
-        </button>
       </div>
     </div>
   );

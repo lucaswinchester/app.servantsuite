@@ -1,32 +1,40 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  Home,
-  Book,
-  BookOpen,
-  Users,
-  Target,
-  Settings,
-  ChevronLeft,
-  ChevronRight,
-  HelpCircle,
-  Moon,
-  Sun
+import { 
+  Home, 
+  Book, 
+  BookOpen, 
+  Users, 
+  Settings, 
+  ChevronLeft, 
+  ChevronRight, 
+  HelpCircle, 
+  Moon, 
+  Sun 
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useSidebar } from '../../context/SidebarContext';
 
-export default function Sidebar({ isCollapsed, isMobileOpen, onToggle }) {
+export default function Sidebar() {
   const pathname = usePathname();
+  const { 
+    isCollapsed, 
+    isMobileOpen, 
+    toggleSidebar, 
+    closeMobileMenu 
+  } = useSidebar();
+  // Close mobile menu when path changes
+  useEffect(() => {
+    closeMobileMenu();
+  }, [pathname, closeMobileMenu]);
 
   const navItems = [
     { path: '/dashboard', icon: <Home size={20} />, label: 'Dashboard' },
     { path: '/sermons', icon: <Book size={20} />, label: 'Sermons' },
     { path: '/series', icon: <BookOpen size={20} />, label: 'Series' },
-    { path: '/team', icon: <Users size={20} />, label: 'Team' },
-    { path: '/resources', icon: <Target size={20} />, label: 'Resources' }
+    { path: '/team', icon: <Users size={20} />, label: 'Team' }
   ];
 
   const [darkMode, setDarkMode] = useState(false);
@@ -50,96 +58,155 @@ export default function Sidebar({ isCollapsed, isMobileOpen, onToggle }) {
   };
 
   return (
-    <nav
-      className={`sidebar ${isCollapsed ? "collapsed" : ""} ${
-        isMobileOpen ? "open" : ""
-      }`}
-      id="sidebar"
-    >
-      <div className="logo-section">
-        <div className="logo flex items-center">
-          <div className="w-8 h-8 flex-shrink-0">
-            <img 
-              src="/ss-icon.svg" 
-              alt="ServantSuite Logo" 
-              className="w-full h-full"
-            />
+    <div className={`h-full flex flex-col ${isCollapsed ? 'w-20' : 'w-[280px]'} py-4 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 relative pointer-events-auto transition-all duration-300`}>
+      <div className="flex-1 flex flex-col overflow-y-auto py-6">
+        {/* Collapse Toggle Button - Positioned absolutely outside the sidebar */}
+        <div className="py-6 absolute -right-3 top-4 z-50">
+          <button
+            onClick={toggleSidebar}
+            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            className={`
+              h-8 w-8 p-1.5 rounded-full
+              bg-white dark:bg-gray-800
+              shadow-lg border border-gray-200 dark:border-gray-600
+              hover:bg-blue-50 dark:hover:bg-blue-900/30
+              hover:border-blue-200 dark:hover:border-blue-800
+              hover:text-blue-600 dark:hover:text-blue-400
+              transition-all duration-200 ease-out
+              flex items-center justify-center
+              focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2
+              ${isCollapsed ? 'rotate-180' : ''}
+            `}
+          >
+            {isCollapsed ? (
+              <ChevronRight size={16} strokeWidth={2.5} />
+            ) : (
+              <ChevronLeft size={16} strokeWidth={2.5} />
+            )}
+          </button>
+        </div>
+
+        {/* Logo Section */}
+        <div className={`relative ${isCollapsed ? 'px-0' : 'px-4'} mb-4`}>
+          <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-start'}`}>
+            <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center">
+              <img 
+                src="/ServantSuite-Icon.png" 
+                alt="ServantSuite"
+                className="w-6 h-6 object-contain"
+              />
+            </div>
+            {!isCollapsed && (
+              <span className="ml-3 text-xl font-bold text-gray-900 dark:text-white">
+                ServantSuite
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Navigation */}
+        <div className="flex-1">
+          <ul className={`space-y-1 ${isCollapsed ? 'flex flex-col items-center' : 'px-2'}`}>
+            {navItems.map((item) => {
+              const isActive = pathname === item.path;
+              return (
+                <li key={item.path}>
+                  <Link
+                    href={item.path}
+                    className={`flex items-center px-3 py-2.5 text-sm font-medium rounded-md transition-colors ${
+                      isActive
+                        ? 'bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] text-white shadow-md'
+                        : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800'
+                    } ${isCollapsed ? 'justify-center px-2' : 'px-3'}`}
+                  >
+                    <span className={`${isCollapsed ? '' : 'mr-3'}`}>
+                      {React.cloneElement(item.icon, {
+                        className: 'flex-shrink-0',
+                        size: 20,
+                      })}
+                    </span>
+                    {!isCollapsed && item.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+
+
+
+        {/* Utility Icons */}
+        <div className={`mt-auto ${isCollapsed ? 'flex flex-col items-center' : 'px-2'}`}>
+          <div className={`${isCollapsed ? 'flex flex-col items-center' : ''}`}>
+          <button 
+              className="group flex items-center w-full p-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800/50 transition-colors"
+              title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              onClick={toggleDarkMode}
+            >
+              <div className="flex items-center justify-center h-6 w-6">
+                {darkMode ? (
+                  <Sun size={18} className="text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+                ) : (
+                  <Moon size={18} className="text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+                )}
+              </div>
+              {!isCollapsed && (
+                <span className="ml-3 text-sm text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">
+                  {darkMode ? 'Light Mode' : 'Dark Mode'}
+                </span>
+              )}
+            </button>
+            <button 
+              className="group flex items-center w-full p-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800/50 transition-colors"
+              title="Help & Support"
+              onClick={() => window.location.href = '/help'}
+            >
+              <div className="flex items-center justify-center h-6 w-6">
+                <HelpCircle size={18} className="text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+              </div>
+              {!isCollapsed && (
+                <span className="ml-3 text-sm text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">
+                  Help
+                </span>
+              )}
+            </button>
+            <button 
+              className={`group flex items-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800/50 transition-colors ${isCollapsed ? 'p-2' : 'w-full pl-3 pr-2 py-2'}`}
+              title="Settings"
+              onClick={() => window.location.href = '/settings'}
+            >
+              <div className="flex items-center justify-center h-6 w-6">
+                <Settings size={18} className="text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+              </div>
+              {!isCollapsed && (
+                <span className="ml-3 text-sm text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">
+                  Settings
+                </span>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* User Section - Pinned to bottom */}
+      <div className={`mt-auto border-t border-gray-100 dark:border-gray-800 transition-all duration-300 ${isCollapsed ? 'px-2' : 'px-4'}`}>
+        <div className={`py-3 flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'}`}>
+          <div 
+            className={`flex-shrink-0 rounded-full bg-gradient-to-br from-[#ff6b6b] to-[#ffa36b] text-white flex items-center justify-center font-medium shadow-sm
+              ${isCollapsed ? 'h-9 w-9 text-sm' : 'h-10 w-10 text-sm'}`}
+            title={isCollapsed ? 'Pastor John' : ''}
+          >
+            PJ
           </div>
           {!isCollapsed && (
-            <span className="logo-text font-semibold text-2xl ml-2">
-              ServantSuite
-            </span>
+            <div className="min-w-0">
+              <h4 className="text-sm font-medium text-gray-900 dark:text-white truncate">Pastor John</h4>
+              <p className="text-xs text-gray-500 dark:text-gray-400 truncate">Grace Community</p>
+            </div>
           )}
         </div>
-        <button
-          className="toggle-sidebar"
-          id="toggleSidebar"
-          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-          title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-          onClick={onToggle}
-        >
-          {isCollapsed ? (
-            <ChevronRight size={16} />
-          ) : (
-            <ChevronLeft size={16} />
-          )}
-        </button>
       </div>
-
-      <ul className="nav-items">
-        {navItems.map((item) => (
-          <li className="nav-item" key={item.path}>
-            <Link 
-              href={item.path} 
-              className={pathname === item.path ? 'active' : ''}
-            >
-              <span className="nav-icon">
-                {item.icon}
-              </span>
-              <span className="nav-text">{item.label}</span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-
-      {/* Utility Icons */}
-      <div className="utility-section">
-        <button 
-          className="utility-icon" 
-          title="Settings"
-          onClick={() => window.location.href = '/settings'}
-        >
-          <Settings size={20} />
-          <span className="utility-tooltip">Settings</span>
-        </button>
-        <button 
-          className="utility-icon" 
-          title="Help & Support"
-          onClick={() => window.location.href = '/help'}
-        >
-          <HelpCircle size={20} />
-          <span className="utility-tooltip">Help</span>
-        </button>
-        <button 
-          className="utility-icon" 
-          title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-          onClick={toggleDarkMode}
-        >
-          {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-          <span className="utility-tooltip">{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
-        </button>
-      </div>
-
-      {/* User Section */}
-      <div className="user-section shadcn-card">
-        <div className="user-info">
-          <div className="user-avatar">PJ</div>
-          <div className="user-details">
-            <h4>Pastor John</h4>
-            <p>Grace Community</p>
-          </div>
-        </div>
-      </div>
-    </nav>
+    </div>
   );
 }
