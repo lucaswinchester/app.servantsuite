@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import StatCard from '../../components/dashboard/StatCard';
 import SermonCard from '../../components/dashboard/SermonCard';
@@ -17,86 +15,31 @@ import {
   Library,
   CheckCircle
 } from 'lucide-react';
+import { auth } from '@clerk/nextjs/server'
+import { getUserOrganizations } from '@/lib/db';
+import { prisma } from '@/lib/prisma';
 
 
-export default function Dashboard() {
-  // Sample data
-  const stats = [
-    {
-      icon: <Calendar size={24} />,
-      label: 'Next Sunday',
-      value: '3 days',
-      change: 'May 26, 2025'
-    },
-    {
-      icon: <Users size={24} />,
-      label: 'Team Online',
-      value: '4',
-      change: '+2 from yesterday'
-    },
-    {
-      icon: <CheckSquare size={24} />,
-      label: 'Pending Tasks',
-      value: '2',
-      change: 'Almost done!'
-    }
-  ];
+export default async function Dashboard() {
+  const user = await auth()
+  const organizations = await getUserOrganizations(user.userId)
 
-  const sermons = [
-    {
-      title: 'The Power of Faith',
-      meta: 'May 19, 2025 • Published',
-      status: 'complete',
-      progress: '100%'
+  // Get recent sermons for user's organizations
+  const recentSermons = await prisma.sermon.findMany({
+    where: {
+      organizationId: {
+        in: organizations.map(org => org.organizationId),
+      },
     },
-    {
-      title: 'Walking in Grace',
-      meta: 'May 12, 2025 • Published',
-      status: 'complete',
-      progress: '100%'
+    include: {
+      series: true,
+      organization: true,
     },
-    {
-      title: 'Finding Peace',
-      meta: 'Draft • In Progress',
-      status: 'partial',
-      progress: '45%'
-    }
-  ];
-
-  const series = [
-    {
-      title: '🌅 Summer of Hope',
-      progress: '33%',
-      progressText: '2 of 6 sermons complete'
+    orderBy: {
+      date: 'desc',
     },
-    {
-      title: '📖 Back to Basics',
-      status: 'Starting June 30'
-    }
-  ];
-
-  const actions = [
-    {
-      icon: <Sparkles size={24} />,
-      title: 'Generate Slides',
-      description: 'Create beautiful presentations with AI magic'
-    },
-    {
-      icon: <Users size={24} />,
-      title: 'Team Updates',
-      description: 'See what your ministry team is working on'
-    },
-    {
-      icon: <Library size={24} />,
-      title: 'Resource Library',
-      description: 'Browse sermons, media, and study materials'
-    },
-    {
-      icon: <CheckCircle size={24} />,
-      title: 'Sunday Checklist',
-      description: "Make sure everything's ready for service"
-    }
-  ];
+    take: 5,
+  })
 
   return (
     <>

@@ -1,0 +1,347 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  admin
+  pastor
+  tech_director
+  media_team
+  volunteer
+
+  @@map("user_role")
+}
+
+enum AssetType {
+  audio
+  video
+  image
+  document
+  presentation
+  graphic
+  background
+  logo
+  other
+
+  @@map("asset_type")
+}
+
+model Organization {
+  id          String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name        String   @db.VarChar(255)
+  slug        String   @unique @db.VarChar(100)
+  description String?
+  website     String?  @db.VarChar(255)
+  address     Json?
+  settings    Json     @default("{}")
+  logoUrl     String?  @map("logo_url") @db.VarChar(500)
+  timezone    String   @default("UTC") @db.VarChar(50)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  members           OrganizationMember[]
+  series            Series[]
+  sermons           Sermon[]
+  assets            Asset[]
+  assetCollections  AssetCollection[]
+  serviceTemplates  ServiceTemplate[]
+  services          Service[]
+  announcements     Announcement[]
+  tasks             Task[]
+  activityLogs      ActivityLog[]
+
+  @@map("organizations")
+}
+
+model User {
+  id                String    @id @db.VarChar(255) // Clerk user ID
+  email             String    @unique @db.VarChar(255)
+  firstName         String?   @map("first_name") @db.VarChar(100)
+  lastName          String?   @map("last_name") @db.VarChar(100)
+  profileImageUrl   String?   @map("profile_image_url") @db.VarChar(500)
+  clerkMetadata     Json      @default("{}") @map("clerk_metadata")
+  lastSignInAt      DateTime? @map("last_sign_in_at") @db.Timestamptz(6)
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  organizationMemberships OrganizationMember[]
+  createdSeries           Series[]             @relation("SeriesCreatedBy")
+  createdSermons          Sermon[]             @relation("SermonCreatedBy")
+  uploadedAssets          Asset[]              @relation("AssetUploadedBy")
+  createdCollections      AssetCollection[]    @relation("CollectionCreatedBy")
+  addedCollectionItems    AssetCollectionItem[] @relation("CollectionItemAddedBy")
+  createdTemplates        ServiceTemplate[]    @relation("TemplateCreatedBy")
+  createdServices         Service[]            @relation("ServiceCreatedBy")
+  createdAnnouncements    Announcement[]       @relation("AnnouncementCreatedBy")
+  createdTasks            Task[]               @relation("TaskCreatedBy")
+  assignedTasks           Task[]               @relation("TaskAssignedTo")
+  completedTasks          Task[]               @relation("TaskCompletedBy")
+  activityLogs            ActivityLog[]
+  invitedMembers          OrganizationMember[] @relation("MemberInvitedBy")
+
+  @@map("users")
+}
+
+model OrganizationMember {
+  id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  organizationId String   @map("organization_id") @db.Uuid
+  userId         String   @map("user_id") @db.VarChar(255)
+  role           UserRole @default(volunteer)
+  permissions    Json     @default("{}")
+  invitedBy      String?  @map("invited_by") @db.VarChar(255)
+  joinedAt       DateTime @default(now()) @map("joined_at") @db.Timestamptz(6)
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  // Relations
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  inviter      User?        @relation("MemberInvitedBy", fields: [invitedBy], references: [id])
+
+  @@unique([organizationId, userId])
+  @@map("organization_members")
+}
+
+model Series {
+  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  organizationId String    @map("organization_id") @db.Uuid
+  title          String    @db.VarChar(255)
+  slug           String    @db.VarChar(200)
+  description    String?
+  imageUrl       String?   @map("image_url") @db.VarChar(500)
+  startDate      DateTime? @map("start_date") @db.Date
+  endDate        DateTime? @map("end_date") @db.Date
+  status         String    @default("draft") @db.VarChar(50)
+  sortOrder      Int       @default(0) @map("sort_order")
+  metadata       Json      @default("{}")
+  createdBy      String    @map("created_by") @db.VarChar(255)
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  creator      User         @relation("SeriesCreatedBy", fields: [createdBy], references: [id])
+  sermons      Sermon[]
+  assets       Asset[]
+
+  @@unique([organizationId, slug])
+  @@map("series")
+}
+
+model Sermon {
+  id                   String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  organizationId       String    @map("organization_id") @db.Uuid
+  seriesId             String?   @map("series_id") @db.Uuid
+  title                String    @db.VarChar(255)
+  slug                 String    @db.VarChar(200)
+  description          String?
+  scriptureReferences  String[]  @map("scripture_references")
+  speaker              String?   @db.VarChar(255)
+  date                 DateTime  @db.Date
+  durationMinutes      Int?      @map("duration_minutes")
+  status               String    @default("draft") @db.VarChar(50)
+  sortOrder            Int       @default(0) @map("sort_order")
+  notes                String?
+  tags                 String[]
+  metadata             Json      @default("{}")
+  createdBy            String    @map("created_by") @db.VarChar(255)
+  createdAt            DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  series       Series?      @relation(fields: [seriesId], references: [id], onDelete: SetNull)
+  creator      User         @relation("SermonCreatedBy", fields: [createdBy], references: [id])
+  assets       Asset[]
+  services     Service[]
+  tasks        Task[]
+
+  @@unique([organizationId, slug])
+  @@map("sermons")
+}
+
+model Asset {
+  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  organizationId String    @map("organization_id") @db.Uuid
+  sermonId       String?   @map("sermon_id") @db.Uuid
+  seriesId       String?   @map("series_id") @db.Uuid
+  name           String    @db.VarChar(255)
+  description    String?
+  type           AssetType
+  fileUrl        String    @map("file_url") @db.VarChar(1000)
+  fileSize       BigInt?   @map("file_size")
+  mimeType       String?   @map("mime_type") @db.VarChar(100)
+  durationSeconds Int?     @map("duration_seconds")
+  dimensions     Json?
+  tags           String[]
+  altText        String?   @map("alt_text") @db.VarChar(500)
+  usageNotes     String?   @map("usage_notes")
+  version        String    @default("1.0") @db.VarChar(50)
+  isPublic       Boolean   @default(false) @map("is_public")
+  accessLevel    String    @default("internal") @map("access_level") @db.VarChar(50)
+  uploadedBy     String    @map("uploaded_by") @db.VarChar(255)
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  organization     Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  sermon           Sermon?               @relation(fields: [sermonId], references: [id], onDelete: Cascade)
+  series           Series?               @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  uploader         User                  @relation("AssetUploadedBy", fields: [uploadedBy], references: [id])
+  collectionItems  AssetCollectionItem[]
+
+  @@map("assets")
+}
+
+model AssetCollection {
+  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  organizationId String    @map("organization_id") @db.Uuid
+  name           String    @db.VarChar(255)
+  description    String?
+  color          String?   @db.VarChar(7)
+  createdBy      String    @map("created_by") @db.VarChar(255)
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  // Relations
+  organization Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  creator      User                  @relation("CollectionCreatedBy", fields: [createdBy], references: [id])
+  items        AssetCollectionItem[]
+
+  @@map("asset_collections")
+}
+
+model AssetCollectionItem {
+  assetId      String   @map("asset_id") @db.Uuid
+  collectionId String   @map("collection_id") @db.Uuid
+  addedAt      DateTime @default(now()) @map("added_at") @db.Timestamptz(6)
+  addedBy      String   @map("added_by") @db.VarChar(255)
+
+  // Relations
+  asset      Asset           @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  collection AssetCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  adder      User            @relation("CollectionItemAddedBy", fields: [addedBy], references: [id])
+
+  @@id([assetId, collectionId])
+  @@map("asset_collection_items")
+}
+
+model ServiceTemplate {
+  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  organizationId String    @map("organization_id") @db.Uuid
+  name           String    @db.VarChar(255)
+  description    String?
+  structure      Json
+  isDefault      Boolean   @default(false) @map("is_default")
+  createdBy      String    @map("created_by") @db.VarChar(255)
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  // Relations
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  creator      User         @relation("TemplateCreatedBy", fields: [createdBy], references: [id])
+  services     Service[]
+
+  @@map("service_templates")
+}
+
+model Service {
+  id                 String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  organizationId     String           @map("organization_id") @db.Uuid
+  sermonId           String?          @map("sermon_id") @db.Uuid
+  templateId         String?          @map("template_id") @db.Uuid
+  title              String           @db.VarChar(255)
+  date               DateTime         @db.Date
+  time               DateTime?        @db.Time(6)
+  type               String           @default("sunday_service") @db.VarChar(100)
+  location           String?          @db.VarChar(255)
+  structure          Json?
+  techRequirements   Json             @default("{}") @map("tech_requirements")
+  staffAssignments   Json             @default("{}") @map("staff_assignments")
+  notes              String?
+  status             String           @default("planning") @db.VarChar(50)
+  createdBy          String           @map("created_by") @db.VarChar(255)
+  createdAt          DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime         @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  sermon       Sermon?          @relation(fields: [sermonId], references: [id], onDelete: SetNull)
+  template     ServiceTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+  creator      User             @relation("ServiceCreatedBy", fields: [createdBy], references: [id])
+  tasks        Task[]
+
+  @@map("services")
+}
+
+model Announcement {
+  id             String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  organizationId String     @map("organization_id") @db.Uuid
+  title          String     @db.VarChar(255)
+  content        String
+  priority       String     @default("normal") @db.VarChar(20)
+  targetRoles    UserRole[] @map("target_roles")
+  expiresAt      DateTime?  @map("expires_at") @db.Timestamptz(6)
+  isPinned       Boolean    @default(false) @map("is_pinned")
+  createdBy      String     @map("created_by") @db.VarChar(255)
+  createdAt      DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  // Relations
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  creator      User         @relation("AnnouncementCreatedBy", fields: [createdBy], references: [id])
+
+  @@map("announcements")
+}
+
+model Task {
+  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  organizationId String    @map("organization_id") @db.Uuid
+  serviceId      String?   @map("service_id") @db.Uuid
+  sermonId       String?   @map("sermon_id") @db.Uuid
+  title          String    @db.VarChar(255)
+  description    String?
+  priority       String    @default("normal") @db.VarChar(20)
+  status         String    @default("todo") @db.VarChar(50)
+  assignedTo     String?   @map("assigned_to") @db.VarChar(255)
+  dueDate        DateTime? @map("due_date") @db.Date
+  createdBy      String    @map("created_by") @db.VarChar(255)
+  completedBy    String?   @map("completed_by") @db.VarChar(255)
+  completedAt    DateTime? @map("completed_at") @db.Timestamptz(6)
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  service      Service?     @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  sermon       Sermon?      @relation(fields: [sermonId], references: [id], onDelete: Cascade)
+  creator      User         @relation("TaskCreatedBy", fields: [createdBy], references: [id])
+  assignee     User?        @relation("TaskAssignedTo", fields: [assignedTo], references: [id])
+  completer    User?        @relation("TaskCompletedBy", fields: [completedBy], references: [id])
+
+  @@map("tasks")
+}
+
+model ActivityLog {
+  id           String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  organizationId String  @map("organization_id") @db.Uuid
+  userId       String?   @map("user_id") @db.VarChar(255)
+  action       String    @db.VarChar(100)
+  resourceType String    @map("resource_type") @db.VarChar(50)
+  resourceId   String?   @map("resource_id") @db.Uuid
+  details      Json      @default("{}")
+  ipAddress    String?   @map("ip_address") @db.Inet
+  userAgent    String?   @map("user_agent")
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  // Relations
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("activity_logs")
+}
