@@ -2,7 +2,7 @@
 'use client'
 
 import { useUser } from '@clerk/nextjs'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import Button from '@/components/ui/Button'
@@ -94,13 +94,6 @@ export default function DashboardPage() {
     }
   }, [isLoaded, user])
 
-  // Fetch organization-specific data when org is selected
-  useEffect(() => {
-    if (selectedOrgId) {
-      fetchDashboardData()
-    }
-  }, [selectedOrgId])
-
   const fetchUserOrganizations = async () => {
     try {
       const response = await fetch('/api/user/organizations')
@@ -123,10 +116,10 @@ export default function DashboardPage() {
     }
   }
 
-  const fetchDashboardData = async () => {
-    if (!selectedOrgId) return
+  const fetchDashboardData = useCallback(async () => {
+    if (!selectedOrgId) return;
 
-    setLoading(true)
+    setLoading(true);
     try {
       // Fetch all dashboard data in parallel
       const [sermonsRes, tasksRes, announcementsRes, statsRes] = await Promise.all([
@@ -134,10 +127,10 @@ export default function DashboardPage() {
         fetch(`/api/organizations/${selectedOrgId}/tasks/my-tasks`),
         fetch(`/api/organizations/${selectedOrgId}/announcements?limit=3`),
         fetch(`/api/organizations/${selectedOrgId}/stats`),
-      ])
+      ]);
 
       if (!sermonsRes.ok || !tasksRes.ok || !announcementsRes.ok || !statsRes.ok) {
-        throw new Error('Failed to fetch dashboard data')
+        throw new Error('Failed to fetch dashboard data');
       }
 
       const [sermonsData, tasksData, announcementsData, statsData] = await Promise.all([
@@ -145,18 +138,24 @@ export default function DashboardPage() {
         tasksRes.json(),
         announcementsRes.json(),
         statsRes.json(),
-      ])
+      ]);
 
-      setRecentSermons(sermonsData.sermons)
-      setMyTasks(tasksData.tasks)
-      setAnnouncements(announcementsData.announcements)
-      setStats(statsData.stats)
+      setRecentSermons(sermonsData.sermons);
+      setMyTasks(tasksData.tasks);
+      setAnnouncements(announcementsData.announcements);
+      setStats(statsData.stats);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load dashboard data')
+      setError(err instanceof Error ? err.message : 'Failed to load dashboard data');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  }, [selectedOrgId]) // Add selectedOrgId as a dependency
+
+  useEffect(() => {
+    if (selectedOrgId) {
+      fetchDashboardData()
+    }
+  }, [fetchDashboardData, selectedOrgId])
 
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
@@ -228,7 +227,7 @@ export default function DashboardPage() {
             <CardTitle>No Organizations</CardTitle>
           </CardHeader>
           <CardContent>
-            <p>You're not a member of any organizations yet.</p>
+            <p>You&apos;re not a member of any organizations yet.</p>
             <Button className="mt-4">Join an Organization</Button>
           </CardContent>
         </Card>
@@ -248,7 +247,7 @@ export default function DashboardPage() {
           Welcome back, {user?.firstName}!
         </h1>
         <p className="text-gray-600 mt-2">
-          Here's what's happening with your ministry teams.
+          Here&apos;s what&apos;s happening with your ministry teams.
         </p>
       </div>
 

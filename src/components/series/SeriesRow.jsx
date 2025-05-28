@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Calendar, Users, MessageSquare } from 'lucide-react';
+import { BookOpen, Calendar, MessageSquare } from 'lucide-react';
 
 export default function SeriesRow({ series, onSeriesClick, onActionClick }) {
   return (

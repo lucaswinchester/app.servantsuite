@@ -2,9 +2,10 @@
 
 import * as React from "react"
 import Button from "./Button"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./Sheet"
-import { MessageSquare, CheckCircle2, Clock, AlertCircle, X, Reply, ThumbsUp } from "lucide-react"
+import { Sheet, SheetContent, SheetTrigger } from "./Sheet"
+import { MessageSquare, CheckCircle2, Clock, AlertCircle, X } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./Tabs"
+import { SheetTitle } from "./Sheet"
 
 export function MentionsSheet({ children }) {
   const [open, setOpen] = React.useState(false)

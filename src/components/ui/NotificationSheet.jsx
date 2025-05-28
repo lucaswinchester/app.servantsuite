@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Button from "./Button"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./Sheet"
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "./Sheet"
 import { Bell, Megaphone, X } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./Tabs"
 
@@ -161,7 +161,7 @@ export function NotificationSheet({ children }) {
                     </div>
                     <h3 className="mt-3 text-sm font-medium text-gray-900 dark:text-white">No notifications</h3>
                     <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                      You're all caught up!
+                      {`You're all caught up!`}
                     </p>
                   </div>
                 )}

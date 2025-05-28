@@ -6,7 +6,6 @@ import SearchBox from '../../components/ui/SearchBox';
 import Button from '@/components/ui/Button';
 import PageHeader from '../../components/layout/PageHeader';
 import {
-  Search,
   Upload,
   Sparkles,
   Edit,

@@ -3,6 +3,8 @@ import { headers } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 import { Webhook } from 'svix'
 import { prisma } from '@/lib/prisma'
+import { WebhookEvent } from '@clerk/nextjs/server'
+import { UserJSON } from '@clerk/nextjs/server'
 
 const webhookSecret = process.env.CLERK_WEBHOOK_SECRET!
 
@@ -20,21 +22,21 @@ export async function POST(req: NextRequest) {
   }
 
   const wh = new Webhook(webhookSecret)
-  let evt: any
+  let evt: WebhookEvent
 
   try {
     evt = wh.verify(body, {
       'svix-id': svixId,
       'svix-timestamp': svixTimestamp,
       'svix-signature': svixSignature,
-    })
+    }) as WebhookEvent
   } catch (err) {
     console.error('Error verifying webhook:', err)
     return new NextResponse('Error occurred', { status: 400 })
   }
 
   const eventType = evt.type
-  const { id, email_addresses, first_name, last_name, image_url } = evt.data
+  const { id, email_addresses, first_name, last_name, image_url } = evt.data as UserJSON
 
   try {
     switch (eventType) {

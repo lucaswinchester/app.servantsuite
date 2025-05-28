@@ -1,5 +1,5 @@
 
-import { Bell, MessageSquare, HelpCircle } from 'lucide-react';
+import { Bell, MessageSquare } from 'lucide-react';
 import { NotificationSheet } from '@/components/ui/NotificationSheet';
 import { MentionsSheet } from '@/components/ui/MentionsSheet';
 

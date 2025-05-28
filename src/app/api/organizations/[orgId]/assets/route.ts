@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireOrganizationAccess, hasOrganizationRole } from '@/lib/db'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@clerk/nextjs/server'
+import { AssetType } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 
 export async function GET(
   req: NextRequest,
@@ -17,11 +19,12 @@ export async function GET(
     const seriesId = searchParams.get('seriesId')
     const limit = searchParams.get('limit')
     const search = searchParams.get('search')
-
-    const where: any = { organizationId: params.orgId }
     
+    const where: Prisma.AssetWhereInput = {
+      organizationId: params.orgId,
+    };    
     if (type) {
-      where.type = type
+      where.type = type as AssetType
     }
     
     if (sermonId) {

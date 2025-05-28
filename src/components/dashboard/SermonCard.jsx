@@ -1,6 +1,7 @@
 import React from 'react';
-import { Book, Plus, Search } from 'lucide-react';
+import { Book } from 'lucide-react';
 import Link from 'next/link';
+import { Search } from 'lucide-react';
 
 export default function SermonCard({ sermons }) {
   return (

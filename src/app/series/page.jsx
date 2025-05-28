@@ -5,11 +5,11 @@ import PageHeader from '../../components/layout/PageHeader';
 import SearchBox from '../../components/ui/SearchBox';
 import Button from '@/components/ui/Button';
 import SeriesRow from '../../components/series/SeriesRow';
-import { Plus, BookOpen, MessageSquare, RefreshCw } from 'lucide-react';
+import { Plus, BookOpen, MessageSquare } from 'lucide-react';
 
 export default function SeriesPage() {
   // Sample series data
-  const [series, setSeries] = useState([
+  const [series] = useState([
     {
       id: 1,
       title: 'Summer of Hope',

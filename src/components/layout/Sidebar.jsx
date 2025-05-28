@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { 
   Home, 
   Book, 
@@ -12,22 +12,21 @@ import {
   ChevronLeft,
   HelpCircle, 
   Moon, 
-  Sun,
-  User
+  Sun
 } from 'lucide-react';
 import { useSidebar } from '../../context/SidebarContext';
 import { UserButton, useUser, useClerk } from '@clerk/nextjs';
 import { Skeleton } from '@/components/ui/skeleton';
+import Image from 'next/image';
 
 export default function Sidebar() {
   const pathname = usePathname();
   const { 
     isCollapsed, 
-    isMobileOpen, 
     toggleSidebar, 
     closeMobileMenu 
   } = useSidebar();
-  const { user, isLoaded, isSignedIn } = useUser();
+  const { user, isLoaded } = useUser();
 
   const clerk = useClerk();
   console.log('Clerk instance:', clerk);
@@ -47,17 +46,6 @@ export default function Sidebar() {
     closeMobileMenu();
   }, [pathname, closeMobileMenu]);
   
-  // Get user initials for avatar
-  const getUserInitials = () => {
-    if (!isLoaded || !user) return 'U';
-    return `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}` || user.emailAddresses[0]?.emailAddress[0].toUpperCase() || 'U';
-  };
-  
-  const getUserName = () => {
-    if (!isLoaded || !user) return 'User';
-    return user.fullName || user.emailAddresses[0]?.emailAddress || 'User';
-  };
-
   const navItems = [
     { path: '/dashboard', icon: <Home size={20} />, label: 'Dashboard' },
     { path: '/sermons', icon: <Book size={20} />, label: 'Sermons' },
@@ -120,7 +108,7 @@ export default function Sidebar() {
         <div className={`relative ${isCollapsed ? 'px-0' : 'px-4'} mb-4`}>
           <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-start'}`}>
             <div className={`flex-shrink-0 flex items-center ${isCollapsed ? 'justify-center w-10 h-10' : 'justify-start h-10 pl-1'}`}>
-              <img 
+              <Image 
                 src="/ServantSuite-Icon.png" 
                 alt="ServantSuite"
                 className="w-8 h-8 object-contain"

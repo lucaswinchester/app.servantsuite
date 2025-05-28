@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireOrganizationAccess, hasOrganizationRole } from '@/lib/db'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@clerk/nextjs/server'
+import { Prisma } from '@prisma/client'
 
 export async function GET(
   req: NextRequest,
@@ -17,7 +18,7 @@ export async function GET(
     const limit = searchParams.get('limit')
     const search = searchParams.get('search')
 
-    const where: any = { organizationId: params.orgId }
+    const where: Prisma.SermonWhereInput = { organizationId: params.orgId }
     
     if (seriesId) {
       where.seriesId = seriesId

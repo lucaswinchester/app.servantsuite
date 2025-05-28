@@ -3,12 +3,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireOrganizationAccess } from '@/lib/db'
 import { prisma } from '@/lib/prisma'
 
-type RouteParams = {
-  params: {
-    orgId: string;
-  };
-};
-
 export async function GET(
   req: NextRequest,
   { params }: { params: { orgId: string } }
@@ -21,8 +15,16 @@ export async function GET(
     const action = searchParams.get('action')
     const limit = searchParams.get('limit') || '50'
 
-    const where: any = { organizationId: params.orgId }
+    interface OrganizationFilter {
+      organizationId: string;
+      resourceType?: string;
+      action?: string;
+    }
     
+    const where: OrganizationFilter = {
+      organizationId: params.orgId,
+    };
+        
     if (resourceType) {
       where.resourceType = resourceType
     }

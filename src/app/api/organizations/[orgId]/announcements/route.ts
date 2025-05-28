@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireOrganizationAccess, hasOrganizationRole } from '@/lib/db'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@clerk/nextjs/server'
+import { Prisma } from '@prisma/client'
 
 export async function GET(
   req: NextRequest,
@@ -16,7 +17,7 @@ export async function GET(
     const pinned = searchParams.get('pinned')
     const limit = searchParams.get('limit')
 
-    const where: any = {
+    const where: Prisma.AnnouncementWhereInput = {
       organizationId: params.orgId,
       OR: [
         { expiresAt: null },

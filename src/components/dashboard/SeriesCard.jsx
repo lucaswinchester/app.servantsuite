@@ -1,6 +1,7 @@
 import React from 'react';
-import { BookOpen, Plus, Search } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 import Link from 'next/link';
+import { Search } from 'lucide-react';
 
 export default function SeriesCard({ series }) {
   return (
