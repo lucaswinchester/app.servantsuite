@@ -3,9 +3,15 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireOrganizationAccess } from '@/lib/db'
 import { prisma } from '@/lib/prisma'
 
+interface Params {
+  params: {
+    orgId: string;
+  };
+}
+
 export async function GET(
   req: NextRequest,
-  { params }: { params: { orgId: string } }
+  { params }: Params
 ) {
   try {
     await requireOrganizationAccess(params.orgId)
