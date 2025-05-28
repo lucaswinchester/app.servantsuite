@@ -7,22 +7,23 @@ import { Prisma } from '@prisma/client'
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { orgId: string } }
+  { params }: { params: Promise<{ orgId: string }> }
 ) {
   try {
+    const { orgId } = await params;
     const { userId } = await auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    await requireOrganizationAccess(params.orgId)
+    await requireOrganizationAccess(orgId)
 
     const { searchParams } = new URL(req.url)
     const status = searchParams.get('status')
     const limit = searchParams.get('limit')
 
     const where: Prisma.TaskWhereInput = {
-      organizationId: params.orgId,
+      organizationId: orgId,
       assignedTo: userId,
     }
     

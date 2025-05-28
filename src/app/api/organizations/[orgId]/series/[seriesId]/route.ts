@@ -6,13 +6,14 @@ import { auth } from '@clerk/nextjs/server'
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { orgId: string; seriesId: string } }
+  { params }: { params: Promise<{ orgId: string; seriesId: string }> }
 ) {
   try {
-    await requireOrganizationAccess(params.orgId)
+    const { orgId, seriesId } = await params;
+    await requireOrganizationAccess(orgId);
 
     const series = await prisma.series.findUnique({
-      where: { id: params.seriesId },
+      where: { id: seriesId },
       include: {
         creator: {
           select: {
@@ -38,7 +39,7 @@ export async function GET(
       },
     })
 
-    if (!series || series.organizationId !== params.orgId) {
+    if (!series || series.organizationId !== orgId) {
       return NextResponse.json({ error: 'Series not found' }, { status: 404 })
     }
 

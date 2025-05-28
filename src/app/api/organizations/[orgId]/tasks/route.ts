@@ -7,10 +7,11 @@ import { Prisma } from '@prisma/client'
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { orgId: string } }
+  { params }: { params: Promise<{ orgId: string }> }
 ) {
   try {
-    await requireOrganizationAccess(params.orgId)
+    const { orgId } = await params;
+    await requireOrganizationAccess(orgId)
 
     const { searchParams } = new URL(req.url)
     const status = searchParams.get('status')
@@ -20,7 +21,7 @@ export async function GET(
     const priority = searchParams.get('priority')
     const limit = searchParams.get('limit')
 
-    const where: Prisma.TaskWhereInput = { organizationId: params.orgId }
+    const where: Prisma.TaskWhereInput = { organizationId: orgId }
     
     if (status) {
       where.status = status

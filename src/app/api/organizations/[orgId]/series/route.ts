@@ -7,16 +7,17 @@ import { Prisma } from '@prisma/client'
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { orgId: string } }
+  { params }: { params: Promise<{ orgId: string }> }
 ) {
   try {
-    await requireOrganizationAccess(params.orgId)
+    const { orgId } = await params;
+    await requireOrganizationAccess(orgId);
 
-    const { searchParams } = new URL(req.url)
+    const { searchParams } = new URL(req.url);
     const status = searchParams.get('status')
     const limit = searchParams.get('limit')
 
-    const where: Prisma.SeriesWhereInput = { organizationId: params.orgId }
+    const where: Prisma.SeriesWhereInput = { organizationId: orgId }
     if (status) {
       where.status = status
     }
@@ -56,15 +57,16 @@ export async function GET(
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { orgId: string } }
+  { params }: { params: Promise<{ orgId: string }> }
 ) {
   try {
+    const { orgId } = await params;
     const { userId } = await auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const hasAccess = await hasOrganizationRole(userId, params.orgId, 'tech_director')
+    const hasAccess = await hasOrganizationRole(userId, orgId, 'tech_director')
     if (!hasAccess) {
       return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 })
     }
@@ -83,7 +85,7 @@ export async function POST(
         status,
         sortOrder,
         metadata,
-        organizationId: params.orgId,
+        organizationId: orgId,
         createdBy: userId,
       },
       include: {

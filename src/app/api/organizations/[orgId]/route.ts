@@ -6,13 +6,14 @@ import { auth } from '@clerk/nextjs/server'
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { orgId: string } }
+  { params }: { params: Promise<{ orgId: string }> }
 ) {
   try {
-    await requireOrganizationAccess(params.orgId)
+    const { orgId } = await params;
+    await requireOrganizationAccess(orgId)
 
     const organization = await prisma.organization.findUnique({
-      where: { id: params.orgId },
+      where: { id: orgId },
       include: {
         members: {
           include: {
@@ -54,15 +55,16 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { orgId: string } }
+  { params }: { params: Promise<{ orgId: string }> }
 ) {
   try {
+    const { orgId } = await params;
     const { userId } = await auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const hasAccess = await hasOrganizationRole(userId, params.orgId, 'admin')
+    const hasAccess = await hasOrganizationRole(userId, orgId, 'admin')
     if (!hasAccess) {
       return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 })
     }
@@ -71,7 +73,7 @@ export async function PUT(
     const { name, description, website, address, settings, logoUrl, timezone } = body
 
     const organization = await prisma.organization.update({
-      where: { id: params.orgId },
+      where: { id: orgId },
       data: {
         name,
         description,
@@ -95,21 +97,22 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { orgId: string } }
+  { params }: { params: Promise<{ orgId: string }> }
 ) {
   try {
+    const { orgId } = await params;
     const { userId } = await auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const hasAccess = await hasOrganizationRole(userId, params.orgId, 'admin')
+    const hasAccess = await hasOrganizationRole(userId, orgId, 'admin')
     if (!hasAccess) {
       return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 })
     }
 
     await prisma.organization.delete({
-      where: { id: params.orgId },
+      where: { id: orgId },
     })
 
     return NextResponse.json({ message: 'Organization deleted successfully' })

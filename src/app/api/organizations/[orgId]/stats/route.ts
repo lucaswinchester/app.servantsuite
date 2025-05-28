@@ -5,29 +5,30 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { orgId: string } }
+  { params }: { params: Promise<{ orgId: string }> }
 ) {
   try {
-    await requireOrganizationAccess(params.orgId)
+    const { orgId } = await params;
+    await requireOrganizationAccess(orgId)
 
     const [totalSermons, upcomingServices, pendingTasks, totalAssets] = await Promise.all([
       prisma.sermon.count({
-        where: { organizationId: params.orgId },
+        where: { organizationId: orgId },
       }),
       prisma.service.count({
         where: {
-          organizationId: params.orgId,
+          organizationId: orgId,
           date: { gte: new Date() },
         },
       }),
       prisma.task.count({
         where: {
-          organizationId: params.orgId,
+          organizationId: orgId,
           status: { in: ['todo', 'in_progress'] },
         },
       }),
       prisma.asset.count({
-        where: { organizationId: params.orgId },
+        where: { organizationId: orgId },
       }),
     ])
 

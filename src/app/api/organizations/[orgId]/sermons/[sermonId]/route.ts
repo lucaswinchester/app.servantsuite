@@ -6,13 +6,14 @@ import { auth } from '@clerk/nextjs/server'
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { orgId: string; sermonId: string } }
+  { params }: { params: Promise<{ orgId: string; sermonId: string }> }
 ) {
   try {
-    await requireOrganizationAccess(params.orgId)
+    const { orgId, sermonId } = await params;
+    await requireOrganizationAccess(orgId);
 
     const sermon = await prisma.sermon.findUnique({
-      where: { id: params.sermonId },
+      where: { id: sermonId },
       include: {
         series: true,
         creator: {
@@ -44,7 +45,7 @@ export async function GET(
       },
     })
 
-    if (!sermon || sermon.organizationId !== params.orgId) {
+    if (!sermon || sermon.organizationId !== orgId) {
       return NextResponse.json({ error: 'Sermon not found' }, { status: 404 })
     }
 
@@ -60,15 +61,16 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { orgId: string; sermonId: string } }
+  { params }: { params: Promise<{ orgId: string; sermonId: string }> }
 ) {
   try {
+    const { orgId, sermonId } = await params;
     const { userId } = await auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const hasAccess = await hasOrganizationRole(userId, params.orgId, 'media_team')
+    const hasAccess = await hasOrganizationRole(userId, orgId, 'media_team')
     if (!hasAccess) {
       return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 })
     }
@@ -91,7 +93,7 @@ export async function PUT(
     } = body
 
     const sermon = await prisma.sermon.update({
-      where: { id: params.sermonId },
+      where: { id: sermonId },
       data: {
         title,
         slug,
@@ -137,21 +139,22 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { orgId: string; sermonId: string } }
+  { params }: { params: Promise<{ orgId: string; sermonId: string }> }
 ) {
   try {
+    const { orgId, sermonId } = await params;
     const { userId } = await auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const hasAccess = await hasOrganizationRole(userId, params.orgId, 'media_team')
+    const hasAccess = await hasOrganizationRole(userId, orgId, 'media_team')
     if (!hasAccess) {
       return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 })
     }
 
     await prisma.sermon.delete({
-      where: { id: params.sermonId },
+      where: { id: sermonId },
     })
 
     return NextResponse.json({ message: 'Sermon deleted successfully' })
