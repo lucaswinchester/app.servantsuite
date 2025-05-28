@@ -3,7 +3,7 @@
 import React from 'react';
 import SermonRow from '../../components/sermons/SermonRow';
 import SearchBox from '../../components/ui/SearchBox';
-import Button from '@/components/ui/button';
+import Button from '@/components/ui/Button';
 import PageHeader from '../../components/layout/PageHeader';
 import {
   Search,

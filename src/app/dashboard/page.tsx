@@ -5,7 +5,7 @@ import { useUser } from '@clerk/nextjs'
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import Button from '@/components/ui/button'
+import Button from '@/components/ui/Button'
 import { CalendarDays, Users, FileText, CheckSquare, Bell } from 'lucide-react'
 
 // Types based on your Prisma schema
