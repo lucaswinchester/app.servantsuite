@@ -55,15 +55,16 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { orgId: string; seriesId: string } }
+  { params }: { params: Promise<{ orgId: string; seriesId: string }> }
 ) {
   try {
+    const { orgId, seriesId } = await params;
     const { userId } = await auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const hasAccess = await hasOrganizationRole(userId, params.orgId, 'tech_director')
+    const hasAccess = await hasOrganizationRole(userId, orgId, 'tech_director')
     if (!hasAccess) {
       return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 })
     }
@@ -72,7 +73,7 @@ export async function PUT(
     const { title, slug, description, imageUrl, startDate, endDate, status, sortOrder, metadata } = body
 
     const series = await prisma.series.update({
-      where: { id: params.seriesId },
+      where: { id: seriesId },
       data: {
         title,
         slug,
@@ -107,21 +108,22 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { orgId: string; seriesId: string } }
+  { params }: { params: Promise<{ orgId: string; seriesId: string }> }
 ) {
   try {
+    const { orgId, seriesId } = await params;
     const { userId } = await auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const hasAccess = await hasOrganizationRole(userId, params.orgId, 'tech_director')
+    const hasAccess = await hasOrganizationRole(userId, orgId, 'tech_director')
     if (!hasAccess) {
       return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 })
     }
 
     await prisma.series.delete({
-      where: { id: params.seriesId },
+      where: { id: seriesId },
     })
 
     return NextResponse.json({ message: 'Series deleted successfully' })

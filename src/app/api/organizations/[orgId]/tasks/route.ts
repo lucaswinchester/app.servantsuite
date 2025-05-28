@@ -101,15 +101,16 @@ export async function GET(
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { orgId: string } }
+  { params }: { params: Promise<{ orgId: string }> }
 ) {
   try {
+    const { orgId } = await params;
     const { userId } = await auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const hasAccess = await hasOrganizationRole(userId, params.orgId, 'tech_director')
+    const hasAccess = await hasOrganizationRole(userId, orgId, 'tech_director')
     if (!hasAccess) {
       return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 })
     }
@@ -136,7 +137,7 @@ export async function POST(
         dueDate: dueDate ? new Date(dueDate) : null,
         serviceId,
         sermonId,
-        organizationId: params.orgId,
+        organizationId: orgId,
         createdBy: userId,
       },
       include: {
