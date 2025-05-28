@@ -1,38 +1,39 @@
 // app/api/organizations/[orgId]/assets/route.ts
-import { NextRequest, NextResponse } from 'next/server'
-import { requireOrganizationAccess, hasOrganizationRole } from '@/lib/db'
-import { prisma } from '@/lib/prisma'
-import { auth } from '@clerk/nextjs/server'
-import { AssetType } from '@prisma/client'
-import { Prisma } from '@prisma/client'
+import { NextRequest, NextResponse } from 'next/server';
+import { requireOrganizationAccess, hasOrganizationRole } from '@/lib/db';
+import { prisma } from '@/lib/prisma';
+import { auth } from '@clerk/nextjs/server';
+import { AssetType } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { orgId: string } }
+  { params }: { params: Promise<{ orgId: string }> }
 ) {
   try {
-    await requireOrganizationAccess(params.orgId)
+    const { orgId } = await params;
+    await requireOrganizationAccess(orgId);
 
-    const { searchParams } = new URL(req.url)
-    const type = searchParams.get('type')
-    const sermonId = searchParams.get('sermonId')
-    const seriesId = searchParams.get('seriesId')
-    const limit = searchParams.get('limit')
-    const search = searchParams.get('search')
-    
+    const { searchParams } = new URL(req.url);
+    const type = searchParams.get('type');
+    const sermonId = searchParams.get('sermonId');
+    const seriesId = searchParams.get('seriesId');
+    const limit = searchParams.get('limit');
+    const search = searchParams.get('search');
+
     const where: Prisma.AssetWhereInput = {
-      organizationId: params.orgId,
-    };    
+      organizationId: orgId,
+    };
     if (type) {
-      where.type = type as AssetType
+      where.type = type as AssetType;
     }
-    
+
     if (sermonId) {
-      where.sermonId = sermonId
+      where.sermonId = sermonId;
     }
-    
+
     if (seriesId) {
-      where.seriesId = seriesId
+      where.seriesId = seriesId;
     }
 
     if (search) {
@@ -40,7 +41,7 @@ export async function GET(
         { name: { contains: search, mode: 'insensitive' } },
         { description: { contains: search, mode: 'insensitive' } },
         { tags: { has: search } },
-      ]
+      ];
     }
 
     const assets = await prisma.asset.findMany({
@@ -70,34 +71,38 @@ export async function GET(
         createdAt: 'desc',
       },
       take: limit ? parseInt(limit) : undefined,
-    })
+    });
 
-    return NextResponse.json({ assets })
+    return NextResponse.json({ assets });
   } catch (error) {
-    console.error('Error fetching assets:', error)
+    console.error('Error fetching assets:', error);
     return NextResponse.json(
       { error: 'Failed to fetch assets' },
       { status: 500 }
-    )
+    );
   }
 }
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { orgId: string } }
+  { params }: { params: Promise<{ orgId: string }> }
 ) {
   try {
-    const { userId } = await auth()
+    const { orgId } = await params;
+    const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const hasAccess = await hasOrganizationRole(userId, params.orgId, 'media_team')
+    const hasAccess = await hasOrganizationRole(userId, orgId, 'media_team');
     if (!hasAccess) {
-      return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 })
+      return NextResponse.json(
+        { error: 'Insufficient permissions' },
+        { status: 403 }
+      );
     }
 
-    const body = await req.json()
+    const body = await req.json();
     const {
       name,
       description,
@@ -115,7 +120,7 @@ export async function POST(
       accessLevel,
       sermonId,
       seriesId,
-    } = body
+    } = body;
 
     const asset = await prisma.asset.create({
       data: {
@@ -135,7 +140,7 @@ export async function POST(
         accessLevel,
         sermonId,
         seriesId,
-        organizationId: params.orgId,
+        organizationId: orgId,
         uploadedBy: userId,
       },
       include: {
@@ -159,14 +164,14 @@ export async function POST(
           },
         },
       },
-    })
+    });
 
-    return NextResponse.json({ asset })
+    return NextResponse.json({ asset });
   } catch (error) {
-    console.error('Error creating asset:', error)
+    console.error('Error creating asset:', error);
     return NextResponse.json(
       { error: 'Failed to create asset' },
       { status: 500 }
-    )
+    );
   }
 }
