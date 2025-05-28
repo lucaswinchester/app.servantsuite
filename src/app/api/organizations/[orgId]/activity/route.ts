@@ -5,9 +5,8 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: NextRequest,
-  context: { params: { orgId: string } }
+  { params }: { params: { orgId: string } }
 ): Promise<NextResponse> {
-  const { params } = context;
   try {
     await requireOrganizationAccess(params.orgId)
 
