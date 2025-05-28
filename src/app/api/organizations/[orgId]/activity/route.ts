@@ -4,13 +4,14 @@ import { requireOrganizationAccess } from '@/lib/db'
 import { prisma } from '@/lib/prisma'
 
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { orgId: string } }
+  request: NextRequest,
+  context: { params: { orgId: string } }
 ): Promise<NextResponse> {
+  const { params } = context;
   try {
     await requireOrganizationAccess(params.orgId)
 
-    const { searchParams } = new URL(req.url)
+    const { searchParams } = new URL(request.url)
     const resourceType = searchParams.get('resourceType')
     const action = searchParams.get('action')
     const limit = searchParams.get('limit') || '50'
