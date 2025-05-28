@@ -1,10 +1,8 @@
 import './globals.css';
-import { Suspense } from 'react';
 import { Inter } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeWrapper } from '@/components/theme/theme-wrapper';
-import { SidebarProvider } from '@/context/SidebarContext';
-import SidebarLayout from '@/components/layout/SidebarLayout';
+import ConditionalLayout from '@/components/layout/ConditionalLayout';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -25,37 +23,33 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} h-full`} suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                const theme = localStorage.getItem('servantsuite-theme') || 'system';
-                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                
-                if (theme === 'dark' || (theme === 'system' && systemDark)) {
-                  document.documentElement.classList.add('dark');
-                } else {
-                  document.documentElement.classList.remove('dark');
-                }
-              } catch (e) {}
-            `,
-          }}
-        />
-      </head>
       <body className="min-h-full bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 antialiased">
-        <ClerkProvider>
+        <ClerkProvider
+          appearance={{
+            baseTheme: undefined,
+            variables: { colorPrimary: '#FF6B6B' },
+            elements: {
+              rootBox: 'w-full',
+              card: 'shadow-none',
+              headerTitle: 'text-2xl font-bold',
+              headerSubtitle: 'text-gray-600 dark:text-gray-300',
+              formFieldInput: 'w-full',
+              formButtonPrimary: 'w-full',
+              footerActionLink: 'text-primary hover:text-primary/80',
+            },
+          }}
+          signInUrl="/sign-in"
+          signUpUrl="/sign-up"
+          afterSignInUrl="/dashboard"
+          afterSignUpUrl="/dashboard"
+        >
           <ThemeWrapper>
-            <SidebarProvider>
-              <SidebarLayout>
-                <Suspense fallback={null}>
-                  {children}
-                </Suspense>
-              </SidebarLayout>
-            </SidebarProvider>
+            <ConditionalLayout>
+              {children}
+            </ConditionalLayout>
           </ThemeWrapper>
         </ClerkProvider>
       </body>
     </html>
-  )
+  );
 }

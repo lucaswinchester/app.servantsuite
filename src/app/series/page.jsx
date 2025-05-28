@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import PageHeader from '../../components/layout/PageHeader';
 import SearchBox from '../../components/ui/SearchBox';
-import Button from '../../components/ui/Button';
+import Button from '@/components/ui/button';
 import SeriesRow from '../../components/series/SeriesRow';
 import { Plus, BookOpen, MessageSquare, RefreshCw } from 'lucide-react';
 

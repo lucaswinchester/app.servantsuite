@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { 
   Home, 
   Book, 
@@ -13,20 +13,11 @@ import {
   HelpCircle, 
   Moon, 
   Sun,
-  LogOut,
-  User,
-  ChevronDown
+  User
 } from 'lucide-react';
 import { useSidebar } from '../../context/SidebarContext';
-import { UserButton, useUser } from '@clerk/nextjs';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { UserButton, useUser, useClerk } from '@clerk/nextjs';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -36,7 +27,20 @@ export default function Sidebar() {
     toggleSidebar, 
     closeMobileMenu 
   } = useSidebar();
-  const { user, isLoaded } = useUser();
+  const { user, isLoaded, isSignedIn } = useUser();
+
+  const clerk = useClerk();
+  console.log('Clerk instance:', clerk);
+
+  console.log(useUser);
+  
+  // Debug logging
+  useEffect(() => {
+    console.log('User loading state:', { isLoaded, user });
+    if (isLoaded && !user) {
+      console.log('User is not authenticated');
+    }
+  }, [isLoaded, user]);
   
   // Close mobile menu when path changes
   useEffect(() => {
@@ -82,7 +86,9 @@ export default function Sidebar() {
   };
 
   return (
-    <div className={`h-full flex flex-col ${isCollapsed ? 'w-20' : 'w-[280px]'} py-4 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 relative pointer-events-auto transition-all duration-300`}>
+    <div 
+      data-collapsed={isCollapsed}
+      className={`h-full flex flex-col ${isCollapsed ? 'w-20' : 'w-[280px]'} py-4 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 pointer-events-auto transition-all duration-300 fixed left-0 top-0 bottom-0 z-40`}>
       <div className="flex-1 flex flex-col overflow-y-auto py-6">
         {/* Collapse Toggle Button - Positioned absolutely outside the sidebar */}
         <div className="py-6 absolute -right-3 top-4 z-50">
@@ -113,11 +119,14 @@ export default function Sidebar() {
         {/* Logo Section */}
         <div className={`relative ${isCollapsed ? 'px-0' : 'px-4'} mb-4`}>
           <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-start'}`}>
-            <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center">
+            <div className={`flex-shrink-0 flex items-center ${isCollapsed ? 'justify-center w-10 h-10' : 'justify-start h-10 pl-1'}`}>
               <img 
                 src="/ServantSuite-Icon.png" 
                 alt="ServantSuite"
-                className="w-6 h-6 object-contain"
+                className="w-8 h-8 object-contain"
+                style={{
+                  marginTop: '0.125rem' // Small adjustment to align with nav icons
+                }}
               />
             </div>
             {!isCollapsed && (
@@ -214,57 +223,43 @@ export default function Sidebar() {
 
       {/* User Section - Pinned to bottom */}
       <div className={`mt-auto border-t border-gray-100 dark:border-gray-800 transition-all duration-300 ${isCollapsed ? 'px-2' : 'px-4'}`}>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className={`w-full py-3 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors`}>
-              <div className="flex items-center gap-3">
-                <div className="flex-shrink-0 rounded-full bg-gradient-to-br from-[#ff6b6b] to-[#ffa36b] text-white flex items-center justify-center font-medium shadow-sm h-9 w-9 text-sm">
-                  {isLoaded && user ? (
-                    <UserButton 
-                      appearance={{
-                        elements: {
-                          avatarBox: 'h-9 w-9',
-                        },
-                      }}
-                    />
-                  ) : (
-                    <span>{getUserInitials()}</span>
-                  )}
-                </div>
+        <div className={`w-full py-3 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
+          <div className="flex items-center gap-3 w-full">
+            {!isLoaded ? (
+              <div className="flex items-center gap-3 w-full">
+                <Skeleton className="h-9 w-9 rounded-full" />
                 {!isCollapsed && (
-                  <div className="text-left min-w-0">
-                    <h4 className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                      {getUserName()}
-                    </h4>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                      {user?.primaryEmailAddress?.emailAddress || 'User'}
-                    </p>
+                  <div className="space-y-1">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-3 w-16" />
                   </div>
                 )}
               </div>
-              {!isCollapsed && (
-                <ChevronDown className="h-4 w-4 text-gray-400" />
-              )}
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-56">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Settings className="mr-2 h-4 w-4" />
-              <span>Settings</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Sign out</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            ) : (
+              <div className="w-full">
+                <UserButton 
+                  appearance={{
+                    elements: {
+                      userButtonAvatarBox: 'h-9 w-9',
+                      userButtonPopoverCard: 'w-72',
+                      userButtonPopoverActionButtonText: 'text-sm',
+                      userButtonPopoverActionButtonIcon: 'h-4 w-4',
+                      userButtonPopoverActionButton: 'h-9 px-3',
+                      userButtonPopoverFooter: 'hidden',
+                      userPreviewMainIdentifier: 'text-sm font-medium',
+                      userPreviewSecondaryIdentifier: 'text-xs text-muted-foreground',
+                      userButtonTrigger: 'w-full justify-start',
+                      userButtonOuterIdentifier: 'text-sm font-medium',
+                      userButtonPopoverActionButtonIconBox: 'h-4 w-4',
+                    },
+                  }}
+                  showName={!isCollapsed}
+                  afterSignOutUrl="/"
+                />
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

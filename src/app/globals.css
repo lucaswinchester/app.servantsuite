@@ -22,6 +22,8 @@ body {
   :root {
     --foreground-rgb: 0, 0, 0;
     --background-rgb: 246, 248, 250;
+    --sidebar-width: 5rem; /* Default collapsed width */
+    --sidebar-expanded-width: 18rem; /* Expanded width */
   }
   
   html {
