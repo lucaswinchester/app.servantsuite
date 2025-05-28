@@ -7,8 +7,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { orgId: string } }
 ): Promise<NextResponse> {
+  const { orgId } = params;
   try {
-    await requireOrganizationAccess(params.orgId)
+    await requireOrganizationAccess(orgId)
 
     const { searchParams } = new URL(request.url)
     const resourceType = searchParams.get('resourceType')
@@ -22,7 +23,7 @@ export async function GET(
     }
     
     const where: OrganizationFilter = {
-      organizationId: params.orgId,
+      organizationId: orgId,
     };
         
     if (resourceType) {
