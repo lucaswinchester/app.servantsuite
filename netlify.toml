@@ -7,8 +7,6 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-  [plugins.inputs]
-    functions = ".netlify/functions"
 
 [functions]
   node_bundler = "esbuild"
