@@ -27,13 +27,11 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <html lang="en" className={`${inter.variable} h-full`} suppressHydrationWarning>
-      <body className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-transparent">
-        <AnimatedGradient/>
-        <div className="relative z-10 w-full max-w-md">
-          {children}
-        </div>
-      </body>
-    </html>
+    <div className={`${inter.variable} min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-transparent`}>
+      <AnimatedGradient/>
+      <div className="relative z-10 w-full max-w-md">
+        {children}
+      </div>
+    </div>
   );
 }
