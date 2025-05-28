@@ -1,34 +1,31 @@
 [build]
-  command = "npm run build"
+  command = "rm -rf .next && npm run build"
   publish = ".next"
+  ignore = "git diff --quiet HEAD^ HEAD -- ."
 
 [build.environment]
+  # Next.js settings
   NEXT_USE_NETLIFY_EDGE = "true"
-  # Disable Netlify's dependency caching for Prisma
-  NETLIFY_NEXT_PLUGIN_SKIP = "true"
+  
   # Prisma settings
   PRISMA_GENERATE_IN_POSTBUILD = "true"
   PRISMA_SKIP_POSTINSTALL_GENERATE = "true"
-  # Node options
+  
+  # Node.js settings
+  NODE_VERSION = "18"
   NODE_OPTIONS = "--max_old_space_size=4096"
-
-[build]
-  # Clean build directory before building
-  command = "rm -rf .next && npm run build"
-  # Enable build caching for faster builds
-  ignore = "git diff --quiet HEAD^ HEAD -- ."
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
 [functions]
   node_bundler = "esbuild"
-  # Increase function timeout if needed
+  node_bundler = "esbuild"
+  external_node_modules = ["@prisma/client"]
+  included_files = ["prisma/**"]
   timeout = 30
-  # Set node version
-  node_version = "18"
 
-# Prisma configuration
 [context.production]
   command = "npm run build"
-  environment = { PRISMA_GENERATE_IN_POSTBUILD = "true" }
+  [context.production.environment]
+    NODE_ENV = "production"
