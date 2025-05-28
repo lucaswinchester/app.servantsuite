@@ -1,17 +1,12 @@
 [build]
-  command = "rm -rf .next && npm run build"
-  publish = ".next"
+  command = "npm run build"
+  publish = "dist"
   ignore = "git diff --quiet HEAD^ HEAD -- ."
 
 [build.environment]
-  # Next.js settings
   NEXT_USE_NETLIFY_EDGE = "true"
-  
-  # Prisma settings
   PRISMA_GENERATE_IN_POSTBUILD = "true"
   PRISMA_SKIP_POSTINSTALL_GENERATE = "true"
-  
-  # Node.js settings
   NODE_VERSION = "18"
   NODE_OPTIONS = "--max_old_space_size=4096"
 
@@ -20,12 +15,10 @@
 
 [functions]
   node_bundler = "esbuild"
-  node_bundler = "esbuild"
   external_node_modules = ["@prisma/client"]
   included_files = ["prisma/**"]
-  timeout = 30
+  timeout = "30"
 
 [context.production]
-  command = "npm run build"
   [context.production.environment]
     NODE_ENV = "production"
