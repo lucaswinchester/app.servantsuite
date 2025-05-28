@@ -3,16 +3,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireOrganizationAccess } from '@/lib/db'
 import { prisma } from '@/lib/prisma'
 
-interface Params {
+type RouteParams = {
   params: {
     orgId: string;
   };
-}
+};
 
 export async function GET(
   req: NextRequest,
-  { params }: Params
-) {
+  { params }: { params: { orgId: string } }
+): Promise<NextResponse> {
   try {
     await requireOrganizationAccess(params.orgId)
 
