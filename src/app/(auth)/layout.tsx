@@ -15,7 +15,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.body.style.margin = '0';
     document.body.style.padding = '0';
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'transparent';
     document.body.style.background = 'transparent';
     
     return () => {
