@@ -27,12 +27,10 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <div className={`${inter.variable} min-h-screen flex items-center justify-center p-4 md:p-6 relative overflow-x-hidden overflow-y-auto bg-transparent`}>
+    <div className={`${inter.variable} min-h-screen flex items-center justify-center px-0 py-4 relative overflow-hidden bg-transparent`}>
       <AnimatedGradient/>
-      <div className="relative z-10 w-full max-w-md mx-auto px-2 sm:px-4">
-        <div className="w-full overflow-hidden">
-          {children}
-        </div>
+      <div className="relative z-10 w-full max-w-md px-4">
+        {children}
       </div>
     </div>
   );

@@ -17,7 +17,7 @@ export default function WaitlistPage() {
               formFieldInput: 'h-12 bg-white/10 border-white/10 text-black placeholder-black/50 focus:ring-2 focus:ring-white/20 rounded-lg',
               formFieldLabel: 'text-black/80 text-sm',
               formFieldAction: 'text-black/60 hover:text-black/80 text-sm',
-              formButtonPrimary: 'w-full bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] text-white hover:opacity-90 transition-opacity rounded-lg py-3 font-medium',
+              formButtonPrimary: 'bg-gradient-to-r from-[#ff6b6b] to-[#ffa36b] text-white hover:bg-white/90 transition-colors rounded-lg',
               footerActionLink: 'text-black/80 hover:text-black transition-colors',
               dividerLine: 'bg-black/20',
               dividerText: 'text-black/50',
