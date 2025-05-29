@@ -39,8 +39,8 @@ export default function WaitlistPage() {
               colorPrimary: '#ffffff',
             },
           }}
-          signInUrl="app.servantsuite.com/sign-in"
-          afterJoinWaitlistUrl="servantsuite.com"
+          signInUrl="https://app.servantsuite.com/sign-in"
+          afterJoinWaitlistUrl="https://servantsuite.com"
         />
       </ClerkLoaded>
     </div>
