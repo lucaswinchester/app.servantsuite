@@ -8,6 +8,8 @@ const publicPaths = [
   '/sign-in/*',
   '/sign-up',
   '/sign-up/*',
+  '/waitlist',
+  '/waitlist/*',
   '/sso-callback',
   '/sso-callback/*',
   '/api/*',
