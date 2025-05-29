@@ -46,6 +46,7 @@ export default function ConditionalLayout({ children }: ConditionalLayoutProps) 
     '/sign-up',
     '/forgot-password',
     '/reset-password',
+    '/waitlist',
   ];
 
   // Check if current path is an auth path
