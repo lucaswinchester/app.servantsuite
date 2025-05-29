@@ -9,7 +9,7 @@ export async function GET() {
     
     // Get user ID from Clerk
     const authData = await auth()
-    console.log('Auth data:', { userId: authData.userId })
+    console.log('Auth data:', JSON.stringify(authData, null, 2))
     
     if (!authData.userId) {
       console.error('No user ID found in session')
@@ -19,10 +19,20 @@ export async function GET() {
       )
     }
 
+    // Debug: Log the raw query we're about to make
+    console.log('Querying for organizations with userId:', authData.userId)
+    
     // Check database connection
     try {
       await prisma.$connect()
       console.log('Database connection successful')
+      
+      // Debug: Try a raw query to see if we can find any organizations
+      const rawQueryResult = await prisma.$queryRaw`
+        SELECT * FROM organization_members WHERE user_id = ${authData.userId};
+      `
+      console.log('Raw query result:', JSON.stringify(rawQueryResult, null, 2))
+      
     } catch (dbError) {
       console.error('Database connection error:', dbError)
       return NextResponse.json(
