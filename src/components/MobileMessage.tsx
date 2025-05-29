@@ -1,6 +1,5 @@
 // components/MobileMessage.tsx
 import React from 'react';
-import style from 'styled-jsx/style';
 
 export function MobileMessage() {
   return (
